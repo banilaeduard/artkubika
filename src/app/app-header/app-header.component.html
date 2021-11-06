@@ -1,0 +1,12 @@
+<img src="\assets\art-kubika-logo.png" routerLink='/'/>
+<div class="right-content">
+    <fa-icon
+    icon="cart-arrow-down"
+    [styles]="{ stroke: 'black', color: 'black' }"
+    size="2x"
+    [spin]="false"
+    routerLink='/cartitems'
+    ></fa-icon>
+
+    <app-user-profile *ngIf='!(loggedIn | async)'></app-user-profile>
+</div>

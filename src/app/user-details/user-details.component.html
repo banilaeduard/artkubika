@@ -1,0 +1,19 @@
+<h1>User details!</h1>
+
+<form>
+<!-- <ng-input theme='haruki' [label="'Username'"] ng-model="userModel.username"></ng-input> -->
+
+<app-input [Label]="'Nume'" ng-model="userModel.name"></app-input>
+
+<app-input [Label]="'Parola'"></app-input>
+
+<app-input [Label]="'Reintroduceti parola'"></app-input>
+
+<app-input [Label]="'E-mail'" [(model)]="userModel.email"></app-input>
+
+<app-input [Label]="'Telefon'" [(model)]="userModel.phone"></app-input>
+
+<app-input [Label]="'Zi de nastere'" [(model)]="userModel.birth"></app-input>
+
+<app-input [Label]="'Adresa'" [(model)]="userModel.address"></app-input>
+</form>

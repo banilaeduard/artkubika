@@ -1,0 +1,15 @@
+<fa-icon 
+    icon="user"
+    [styles]="{ stroke: 'black', color: 'black' }"
+    size="2x"
+    [spin]="false"
+    (mouseenter)="open($event, undefined)"
+    routerLink='/user'
+    >
+</fa-icon>
+<ng-template #userMenu let-user>
+  <section class="user-menu">
+    <div>Logout</div>
+    <div>Send to</div>
+  </section>
+</ng-template>
