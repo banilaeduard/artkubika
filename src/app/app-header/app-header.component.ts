@@ -11,10 +11,10 @@ export class AppHeaderComponent implements OnInit {
   public loggedIn!: Observable<boolean>;
   constructor(authService: AuthentificationService) {
     this.loggedIn = authService.getIsUserLogged$();
-   }
+  }
 
   ngOnInit(): void {
-    
+
   }
 
 }

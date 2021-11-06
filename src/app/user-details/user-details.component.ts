@@ -10,7 +10,7 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
   @Input()
   public userModel!: UserModel;
 
-  constructor() { this.userModel = { username: 'Japca'} as UserModel; }
+  constructor() { this.userModel = { username: 'Japca' } as UserModel; }
   ngOnDestroy(): void {
     console.log(this.userModel);
   }
@@ -18,5 +18,5 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
   }
 
-  
+
 }

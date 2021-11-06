@@ -21,7 +21,7 @@ export class AuthentificationService {
     this.user = JSON.parse(userString!);
   }
 
-  public getUser() : UserModel {
+  public getUser(): UserModel {
     return this.user;
   }
 
