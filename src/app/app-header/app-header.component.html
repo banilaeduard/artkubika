@@ -3,5 +3,8 @@
     <fa-icon icon="cart-arrow-down" [styles]="{ stroke: 'black', color: 'black' }" size="2x" [spin]="false"
         routerLink='/cartitems'></fa-icon>
 
-    <app-user-profile *ngIf='!(loggedIn | async)'></app-user-profile>
+    <app-user-profile *ngIf='loggedIn | async'></app-user-profile>
+    <fa-icon icon="user" *ngIf='!(loggedIn | async)' [styles]="{ stroke: 'black', color: 'black' }" size="2x"
+        routerLink='/login'>
+    </fa-icon>
 </div>
