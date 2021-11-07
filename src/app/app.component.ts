@@ -1,4 +1,5 @@
-import { Component, ViewChild } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgScrollbar } from 'ngx-scrollbar/public-api';
 
 @Component({
@@ -6,8 +7,17 @@ import { NgScrollbar } from 'ngx-scrollbar/public-api';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.less']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   @ViewChild("scrollable") scrollTarget!: NgScrollbar;
+
+  constructor(private httpClient: HttpClient) {
+
+  }
+
+  ngOnInit(): void {
+    this.httpClient.get('ping').subscribe(pong => console.log(pong));
+  }
+
 
   public onActivate($event: any): void {
     this.scrollTarget.scrollTo({

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpBackend, HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, EMPTY, Observable, tap } from 'rxjs';
 import { UserModel } from './models/UserModel';
@@ -16,17 +16,18 @@ export class AuthentificationService {
     this.tryReadUser();
   }
 
+
+  public confirmEmail(token: string, email: string): Observable<any> {
+    return this.httpClient.post(`createaccount/confirmation-email?token=${encodeURIComponent(token)}&email=${email}`, {});
+  }
+
   public createUser(user: UserModel, password: string): Observable<any> {
-    return this.httpClient.post('createaccount', {
+    return this.httpClient.post(`createaccount?confirmationUrl=${window.location.origin + '/confirmationEmail'}`, {
       Name: user.name,
       Email: user.email,
       Phone: user.phone,
       Password: password
-    }).pipe(
-      tap(_ => {
-        console.log('shold redirect to confirm account page');
-      })
-    );
+    });
   }
 
   public login(username: string, password: string): Observable<any> {
@@ -44,17 +45,23 @@ export class AuthentificationService {
     );
   }
 
-  public logout(): Observable<any> {
+  public logout(): void {
     this.storage.removeItem('user');
     this.tryReadUser();
-
-    // also revoke backend tokens
-    return EMPTY;
+    this.httpClient.post('users/revoke-token', {}).subscribe();
   }
 
   public refreshToken(): Observable<any> {
-    //to do
-    return EMPTY;
+    return this.httpClient.post('users/refresh-token', {})
+      .pipe(
+        tap((response: any) => {
+          this.storage.setItem('user', JSON.stringify({
+            username: response.username,
+            jwtToken: response.jwtToken
+          }));
+          this.tryReadUser();
+        })
+      )
   }
 
   public get User(): { username: string, jwtToken: string } {

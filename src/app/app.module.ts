@@ -22,6 +22,7 @@ import { BaseUrlInterceptor } from './core/http/BaseUrlInterceptor';
 import { LoginComponent } from './core/login/login.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { JwtTokenInterceptor } from './core/http/JwtTokenInterceptor';
+import { ConfirmationEmailComponent } from './core/confirmation-email/confirmation-email.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { JwtTokenInterceptor } from './core/http/JwtTokenInterceptor';
     CartListItemsComponent,
     UserProfileComponent,
     ContextMenuComponent,
-    LoginComponent
+    LoginComponent,
+    ConfirmationEmailComponent
   ],
   imports: [
     BrowserModule,

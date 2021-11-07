@@ -2,7 +2,7 @@ import { HttpRequest, HttpHandler, HttpInterceptor } from "@angular/common/http"
 import { Inject, Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subject, Observable, throwError, EMPTY, of } from "rxjs";
-import { catchError, switchMap, tap } from "rxjs/operators";
+import { catchError, filter, switchMap, tap } from "rxjs/operators";
 import { AuthentificationService } from "src/app/authentification.service";
 
 @Injectable()
@@ -15,7 +15,7 @@ export class JwtTokenInterceptor implements HttpInterceptor {
 
     refreshTokenInProgress = false;
 
-    tokenRefreshedSource = new Subject();
+    tokenRefreshedSource = new Subject<boolean>();
     tokenRefreshed$ = this.tokenRefreshedSource.asObservable();
 
 
@@ -46,9 +46,10 @@ export class JwtTokenInterceptor implements HttpInterceptor {
             return this.authService.refreshToken().pipe(
                 tap(() => {
                     this.refreshTokenInProgress = false;
-                    this.tokenRefreshedSource.next('');
+                    this.tokenRefreshedSource.next(true);
                 }),
                 catchError((err) => {
+                    this.tokenRefreshedSource.next(false);
                     this.refreshTokenInProgress = false;
                     this.logout();
                     return of(err);
@@ -70,6 +71,7 @@ export class JwtTokenInterceptor implements HttpInterceptor {
         // Invalid token error
         else if (error.status === 401) {
             return this.refreshToken().pipe(
+                filter(success => success),
                 switchMap(() => {
                     request = this.addAuthHeader(request!);
                     return next!.handle(request!);
