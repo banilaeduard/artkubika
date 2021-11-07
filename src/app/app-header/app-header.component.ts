@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { AuthentificationService } from '../authentification.service';
+import { AuthentificationService } from '../core/services/authentification.service';
 
 @Component({
   selector: 'app-header',
@@ -9,7 +10,7 @@ import { AuthentificationService } from '../authentification.service';
 })
 export class AppHeaderComponent implements OnInit {
   public loggedIn!: Observable<boolean>;
-  constructor(authService: AuthentificationService) {
+  constructor(authService: AuthentificationService, private router: Router) {
     this.loggedIn = authService.getIsUserLogged$();
   }
 
@@ -17,4 +18,7 @@ export class AppHeaderComponent implements OnInit {
 
   }
 
+  public cartClick(): void {
+    this.router.navigate(['/cartitems']);
+  }
 }

@@ -23,6 +23,14 @@ import { LoginComponent } from './core/login/login.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { JwtTokenInterceptor } from './core/http/JwtTokenInterceptor';
 import { ConfirmationEmailComponent } from './core/confirmation-email/confirmation-email.component';
+import { BaseCartItem, ShoppingCartModule } from 'ng-shopping-cart';
+import { SocialLoginModule, SocialAuthServiceConfig } from 'angularx-social-login';
+import {
+  GoogleLoginProvider,
+  FacebookLoginProvider
+} from 'angularx-social-login';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -46,7 +54,18 @@ import { ConfirmationEmailComponent } from './core/confirmation-email/confirmati
     OverlayModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    SocialLoginModule,
+    ShoppingCartModule.forRoot({ // <-- Add the cart module to your root module
+      itemType: BaseCartItem, // <-- Configuration is optional
+      serviceType: 'sessionStorage',
+      serviceOptions: {
+        storageKey: 'NgShoppingCart',
+        clearOnError: true
+      }
+    }),
+    BrowserAnimationsModule, // required animations module
+    ToastrModule.forRoot()
   ],
   providers: [
     { provide: "BASE_API_URL", useValue: environment.baseUrl },
@@ -59,7 +78,25 @@ import { ConfirmationEmailComponent } from './core/confirmation-email/confirmati
       provide: HTTP_INTERCEPTORS,
       useClass: JwtTokenInterceptor,
       multi: true,
-    }
+    },
+    {
+      provide: 'SocialAuthServiceConfig',
+      useValue: {
+        autoLogin: false,
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider(
+              'clientId'
+            )
+          },
+          {
+            id: FacebookLoginProvider.PROVIDER_ID,
+            provider: new FacebookLoginProvider('clientId')
+          }
+        ]
+      } as SocialAuthServiceConfig
+    },
   ],
   bootstrap: [AppComponent]
 })

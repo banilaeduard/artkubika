@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap, take } from 'rxjs';
-import { AuthentificationService } from 'src/app/authentification.service';
+import { AuthentificationService } from 'src/app/core/services/authentification.service';
 
 @Component({
   selector: 'app-confirmation-email',

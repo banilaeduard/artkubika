@@ -2,8 +2,10 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { first } from 'rxjs/operators';
-import { AuthentificationService } from '../authentification.service';
+import { AuthentificationService } from '../core/services/authentification.service';
 import { UserModel } from '../models/UserModel';
+import { ToastrService } from 'ngx-toastr';
+import { UserManagerService } from '../core/services/user.manager.service';
 
 @Component({
   selector: 'app-user-details',
@@ -18,15 +20,12 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
 
   public submitted!: boolean;
 
-  public error!: string;
-
-
   constructor(
     private authentificationService: AuthentificationService,
+    private userManagerService: UserManagerService,
     private formBuilder: FormBuilder,
-    private route: ActivatedRoute,
-    private router: Router,) {
-
+    private router: Router,
+    private toastr: ToastrService) {
   }
 
   ngOnInit(): void {
@@ -42,7 +41,6 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
   }
   get f() { return this.userForm.controls; }
 
-
   onSubmit() {
     this.submitted = true;
 
@@ -50,25 +48,30 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
     if (this.userForm.invalid) {
       return;
     }
+    if (!this.authentificationService.getIsUserLogged) {
+      this.userManagerService.createUser({
+        address: this.f['address'].value,
+        birth: this.f['birthday'].value,
+        phone: this.f['phone'].value,
+        email: this.f["email"].value,
+        name: this.f["name"].value,
+        username: this.f["email"].value
+      } as UserModel, this.f['password'].value)
+        .pipe(first())
+        .subscribe({
+          next: data => {
+            this.router.navigate(["/"]);
+          },
+          error: response => {
+            response.error.forEach((error: { code: string, description: string }) => {
+              this.toastr.error(error.description, error.code, { disableTimeOut: true });
+            });
+            console.log(response);
+          }
+        });
+    } else {
 
-    this.authentificationService.createUser({
-      address: this.f['address'].value,
-      birth: this.f['birthday'].value,
-      phone: this.f['phone'].value,
-      email: this.f["email"].value,
-      name: this.f["name"].value,
-      username: this.f["email"].value
-    } as UserModel, this.f['password'].value)
-      .pipe(first())
-      .subscribe({
-        next: data => {
-          this.router.navigate(["/"]);
-        },
-        error: error => {
-          this.error = error;
-          console.log(error);
-        }
-      });
+    }
   }
 
   ngOnDestroy(): void {

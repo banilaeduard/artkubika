@@ -3,7 +3,7 @@ import { Inject, Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Subject, Observable, throwError, EMPTY, of } from "rxjs";
 import { catchError, filter, switchMap, tap } from "rxjs/operators";
-import { AuthentificationService } from "src/app/authentification.service";
+import { AuthentificationService } from "src/app/core/services/authentification.service";
 
 @Injectable()
 export class JwtTokenInterceptor implements HttpInterceptor {

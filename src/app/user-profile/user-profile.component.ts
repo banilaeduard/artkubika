@@ -25,8 +25,6 @@ export class UserProfileComponent implements OnInit {
   }
 
   open({ x, y }: MouseEvent, user: any) {
-    console.log(x);
-    console.log(y);
     this.close();
     const positionStrategy = this.overlay.position()
       .flexibleConnectedTo({ x, y })

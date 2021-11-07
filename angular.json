@@ -30,6 +30,8 @@
               "src/assets"
             ],
             "styles": [
+              "node_modules/ng-shopping-cart/styles/css/ng-shopping-cart.css",
+              "node_modules/ngx-toastr/toastr.css",
               "src/styles.less",
               "variables.less"
             ],
@@ -98,6 +100,8 @@
               "src/assets"
             ],
             "styles": [
+              "node_modules/ng-shopping-cart/styles/css/ng-shopping-cart.css",
+              "node_modules/ngx-toastr/toastr.css",
               "src/styles.less",
               "variables.less"
             ],

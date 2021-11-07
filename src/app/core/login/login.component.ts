@@ -2,7 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
-import { AuthentificationService } from 'src/app/authentification.service';
+import { AuthentificationService } from 'src/app/core/services/authentification.service';
+import { GoogleLoginProvider, SocialAuthService } from 'angularx-social-login';
+import { ToastrService } from 'ngx-toastr';
+
 
 @Component({
   selector: 'app-login',
@@ -14,14 +17,19 @@ export class LoginComponent implements OnInit {
   loading = false;
   submitted = false;
   returnUrl!: string;
-  error = '';
 
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private authenticationService: AuthentificationService
-  ) { }
+    private authenticationService: AuthentificationService,
+    private socialLogin: SocialAuthService,
+    private toastr: ToastrService
+  ) {
+    if (this.authenticationService.getIsUserLogged) {
+      // this.router.navigate(['/']);
+    }
+  }
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
@@ -39,6 +47,10 @@ export class LoginComponent implements OnInit {
   // convenience getter for easy access to form fields
   get f() { return this.loginForm.controls; }
 
+  signInWithGoogle(): void {
+    this.socialLogin.signIn(GoogleLoginProvider.PROVIDER_ID).then(console.log);
+  }
+
   onSubmit() {
     this.submitted = true;
 
@@ -54,9 +66,10 @@ export class LoginComponent implements OnInit {
         next: data => {
           this.router.navigate([this.returnUrl]);
         },
-        error: error => {
-          this.error = error;
+        error: response => {
+          this.toastr.error(response.error.message, 'Login error', { disableTimeOut: true });
           this.loading = false;
+          console.log(response);
         }
       });
   }

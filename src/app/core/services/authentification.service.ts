@@ -1,7 +1,6 @@
-import { HttpBackend, HttpClient } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, EMPTY, Observable, tap } from 'rxjs';
-import { UserModel } from './models/UserModel';
 
 @Injectable({
   providedIn: 'root'
@@ -16,18 +15,8 @@ export class AuthentificationService {
     this.tryReadUser();
   }
 
-
   public confirmEmail(token: string, email: string): Observable<any> {
     return this.httpClient.post(`createaccount/confirmation-email?token=${encodeURIComponent(token)}&email=${email}`, {});
-  }
-
-  public createUser(user: UserModel, password: string): Observable<any> {
-    return this.httpClient.post(`createaccount?confirmationUrl=${window.location.origin + '/confirmationEmail'}`, {
-      Name: user.name,
-      Email: user.email,
-      Phone: user.phone,
-      Password: password
-    });
   }
 
   public login(username: string, password: string): Observable<any> {
@@ -70,6 +59,10 @@ export class AuthentificationService {
 
   public getIsUserLogged$(): Observable<boolean> {
     return this.isUserLoggedIn.asObservable();
+  }
+
+  public get getIsUserLogged(): boolean {
+    return this.isUserLoggedIn.value;
   }
 
   private tryReadUser() {
