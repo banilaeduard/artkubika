@@ -24,13 +24,15 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { JwtTokenInterceptor } from './core/http/JwtTokenInterceptor';
 import { ConfirmationEmailComponent } from './core/confirmation-email/confirmation-email.component';
 import { BaseCartItem, ShoppingCartModule } from 'ng-shopping-cart';
-import { SocialLoginModule, SocialAuthServiceConfig } from 'angularx-social-login';
-import {
-  GoogleLoginProvider,
-  FacebookLoginProvider
-} from 'angularx-social-login';
+// import { SocialLoginModule, SocialAuthServiceConfig } from 'angularx-social-login';
+// import {
+//   GoogleLoginProvider,
+//   FacebookLoginProvider
+// } from 'angularx-social-login';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
+import { ClipboardModule } from '@angular/cdk/clipboard';
+import { OverlaymenuComponent } from './core/overlaymenu/overlaymenu.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +45,8 @@ import { ToastrModule } from 'ngx-toastr';
     UserProfileComponent,
     ContextMenuComponent,
     LoginComponent,
-    ConfirmationEmailComponent
+    ConfirmationEmailComponent,
+    OverlaymenuComponent
   ],
   imports: [
     BrowserModule,
@@ -55,17 +58,18 @@ import { ToastrModule } from 'ngx-toastr';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    SocialLoginModule,
+    //SocialLoginModule,
     ShoppingCartModule.forRoot({ // <-- Add the cart module to your root module
       itemType: BaseCartItem, // <-- Configuration is optional
-      serviceType: 'sessionStorage',
+      serviceType: 'localStorage',
       serviceOptions: {
         storageKey: 'NgShoppingCart',
         clearOnError: true
       }
     }),
     BrowserAnimationsModule, // required animations module
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    ClipboardModule
   ],
   providers: [
     { provide: "BASE_API_URL", useValue: environment.baseUrl },
@@ -79,24 +83,24 @@ import { ToastrModule } from 'ngx-toastr';
       useClass: JwtTokenInterceptor,
       multi: true,
     },
-    {
-      provide: 'SocialAuthServiceConfig',
-      useValue: {
-        autoLogin: false,
-        providers: [
-          {
-            id: GoogleLoginProvider.PROVIDER_ID,
-            provider: new GoogleLoginProvider(
-              'clientId'
-            )
-          },
-          {
-            id: FacebookLoginProvider.PROVIDER_ID,
-            provider: new FacebookLoginProvider('clientId')
-          }
-        ]
-      } as SocialAuthServiceConfig
-    },
+    // {
+    //   provide: 'SocialAuthServiceConfig',
+    //   useValue: {
+    //     autoLogin: false,
+    //     providers: [
+    //       {
+    //         id: GoogleLoginProvider.PROVIDER_ID,
+    //         provider: new GoogleLoginProvider(
+    //           'clientId'
+    //         )
+    //       },
+    //       {
+    //         id: FacebookLoginProvider.PROVIDER_ID,
+    //         provider: new FacebookLoginProvider('clientId')
+    //       }
+    //     ]
+    //   } as SocialAuthServiceConfig
+    // },
   ],
   bootstrap: [AppComponent]
 })

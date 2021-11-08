@@ -9,9 +9,10 @@ import { AuthentificationService } from '../core/services/authentification.servi
   styleUrls: ['./app-header.component.less']
 })
 export class AppHeaderComponent implements OnInit {
-  public loggedIn!: Observable<boolean>;
+  public loggedIn!: Observable<{ loggedIn: boolean, username: string }>;
+  public user!: Observable<string>;
   constructor(authService: AuthentificationService, private router: Router) {
-    this.loggedIn = authService.getIsUserLogged$();
+    this.loggedIn = authService.getUserInfo$;
   }
 
   ngOnInit(): void {

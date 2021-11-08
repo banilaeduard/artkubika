@@ -1,9 +1,15 @@
-<fa-icon icon="user" [styles]="{ stroke: 'black', color: 'black' }" size="2x" [spin]="false"
-  (mouseenter)="open($event, undefined)" routerLink='/user'>
+<fa-icon icon="user" [styles]="{ stroke: 'black', color: 'black' }" size="2x" [spin]="false" (click)="open($event)">
 </fa-icon>
-<ng-template #userMenu let-user>
-  <section class="user-menu">
-    <div>Logout</div>
-    <div>Send to</div>
-  </section>
-</ng-template>
+<app-overlaymenu [closeCondition]="closeCond" [template]="template" #userMenu>
+  <ng-template #template>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <ul class="user-menu navbar-nav mr-auto">
+        <span class="navbar-text" [cdkCopyToClipboard]="user">
+          {{user}}
+        </span>
+        <button class="btn nav-item btn-info btn-sm bg-light" routerLink="/user">Go to profile</button>
+        <button class="btn nav-item btn-info btn-sm bg-light" routerLink="/login">Logout</button>
+      </ul>
+    </nav>
+  </ng-template>
+</app-overlaymenu>

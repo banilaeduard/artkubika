@@ -107,6 +107,7 @@ export class JwtTokenInterceptor implements HttpInterceptor {
     }
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<any> {
+        this.authService.syncUserWithStorage();
         // Handle request
         request = this.addAuthHeader(request);
 

@@ -6,7 +6,5 @@ export interface UserModel {
     phone: string;
     address: string;
 
-    isAdmin: boolean;
-    token: string;
-    expire: Date;
+    loggedIn: boolean;
 }

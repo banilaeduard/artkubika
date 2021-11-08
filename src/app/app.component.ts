@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgScrollbar } from 'ngx-scrollbar/public-api';
 import { ToastrService } from 'ngx-toastr';
+import { AuthentificationService } from './core/services/authentification.service';
 
 @Component({
   selector: 'app-root',
@@ -12,14 +12,12 @@ export class AppComponent implements OnInit {
   @ViewChild("scrollable") scrollTarget!: NgScrollbar;
 
   constructor(
-    private httpClient: HttpClient,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private authService: AuthentificationService
   ) {
-
   }
 
   ngOnInit(): void {
-    this.httpClient.get('ping').subscribe(pong => console.log(pong));
   }
 
   public onActivate($event: any): void {
@@ -33,6 +31,7 @@ export class AppComponent implements OnInit {
       }
     });
     this.toastr.clear();
+    this.authService.syncUserWithStorage();
   }
 
   ngOnDestroy() {

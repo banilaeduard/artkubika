@@ -1,66 +1,52 @@
-import { Component, OnInit, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
-import { Overlay, OverlayRef } from '@angular/cdk/overlay';
-import { filter, fromEvent, Subscription, take } from 'rxjs';
-import { TemplatePortal } from '@angular/cdk/portal';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AuthentificationService } from '../core/services/authentification.service';
+import { OverlaymenuComponent } from '../core/overlaymenu/overlaymenu.component';
+import { filter, fromEvent, Observable, Subscription, take, tap } from 'rxjs';
 
 @Component({
   selector: 'app-user-profile',
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.less']
 })
-export class UserProfileComponent implements OnInit {
-  users = Array.from({ length: 10 }, () => ({
-    name: 'test'
-  }));
-  private sub!: Subscription;
+export class UserProfileComponent implements OnInit, OnDestroy {
+  @ViewChild('userMenu') userMenu!: OverlaymenuComponent;
+  @ViewChild('template') template!: TemplateRef<any>;
+  private currentTarget!: HTMLElement;
+  private toggle!: boolean;
 
-  @ViewChild('userMenu') userMenu!: TemplateRef<any>;
+  public user!: string;
+  public closeCond!: Observable<any>;
+  public sub!: Subscription;
 
-  private overlayRef!: OverlayRef | null;
-
-  constructor(public overlay: Overlay,
-    public viewContainerRef: ViewContainerRef) { }
+  constructor(public authService: AuthentificationService) {
+    this.closeCond = fromEvent<MouseEvent>(document, 'click')
+      .pipe(
+        filter(event =>
+          this.currentTarget != event.target
+        ),
+        tap(_ => this.toggle = false),
+        take(1)
+      );
+  }
 
   ngOnInit(): void {
+    this.sub = this.authService.getUserInfo$.subscribe(user => this.user = user.username);
   }
 
-  open({ x, y }: MouseEvent, user: any) {
-    this.close();
-    const positionStrategy = this.overlay.position()
-      .flexibleConnectedTo({ x, y })
-      .withPositions([
-        {
-          originX: 'end',
-          originY: 'bottom',
-          overlayX: 'end',
-          overlayY: 'top',
-        }
-      ]);
-
-    this.overlayRef = this.overlay.create({
-      positionStrategy,
-      scrollStrategy: this.overlay.scrollStrategies.close()
-    });
-
-    this.overlayRef.attach(new TemplatePortal(this.userMenu, this.viewContainerRef, {
-      $implicit: user
-    }));
-
-    this.sub = fromEvent<MouseEvent>(document, 'click')
-      .pipe(
-        filter(event => {
-          const clickTarget = event.target as HTMLElement;
-          return !!this.overlayRef && !this.overlayRef.overlayElement.contains(clickTarget);
-        }),
-        take(1)
-      ).subscribe(() => this.close())
-  }
-
-  close() {
+  ngOnDestroy(): void {
     this.sub && this.sub.unsubscribe();
-    if (this.overlayRef) {
-      this.overlayRef.dispose();
-      this.overlayRef = null;
+    this.userMenu.close();
+  }
+
+  open(ev: MouseEvent) {
+    this.toggle = !this.toggle;
+    if (this.toggle) {
+      this.currentTarget = ev.target as HTMLElement;
+      const targetPos = this.currentTarget.getBoundingClientRect();
+      this.userMenu.open(targetPos.x + targetPos.width, 56);
+    } else {
+      this.userMenu.close();
+      this.toggle = false;
     }
   }
 }

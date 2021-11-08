@@ -1,29 +1,24 @@
 @import '/variables.less';
 
 :host {
-    background   : @header-background;
-    padding      : 0.75em;
-    display      : flex;
-    align-items  : center;
-    border-radius: 25px;
-    height       : 56px;
+    nav {
+        background : @header-background;
+        padding    : 0.75em;
+        display    : flex;
+        align-items: center;
+        height     : 56px;
 
-    img {
-        cursor: pointer;
-    }
-}
+        img {
+            cursor: pointer;
+        }
 
-.right-content {
-    margin-left : auto;
-    margin-right: 1em;
-    display     : flex;
+        fa-icon {
+            margin-right: 1.5em;
+        }
 
-    fa-icon {
-        margin-right: 1.5em;
-    }
-
-    cart-summary {
-        margin-right: 1.5em;
-        cursor      : pointer;
+        cart-summary {
+            margin-right: 1.5em;
+            cursor      : pointer;
+        }
     }
 }

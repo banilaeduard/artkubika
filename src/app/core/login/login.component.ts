@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 import { AuthentificationService } from 'src/app/core/services/authentification.service';
 import { GoogleLoginProvider, SocialAuthService } from 'angularx-social-login';
 import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -12,23 +13,24 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.less']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
   loginForm!: FormGroup;
   loading = false;
   submitted = false;
   returnUrl!: string;
+  subscription!: Subscription;
 
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private authenticationService: AuthentificationService,
-    private socialLogin: SocialAuthService,
+    // private socialLogin: SocialAuthService,
     private toastr: ToastrService
   ) {
-    if (this.authenticationService.getIsUserLogged) {
-      // this.router.navigate(['/']);
-    }
+  }
+  ngOnDestroy(): void {
+    this.subscription && this.subscription.unsubscribe();
   }
 
   ngOnInit() {
@@ -39,6 +41,10 @@ export class LoginComponent implements OnInit {
 
     // reset login status
     this.authenticationService.logout();
+    this.subscription = this.authenticationService.getUserInfo$
+      .subscribe(userInfo =>
+        userInfo.loggedIn && this.router.navigate([this.returnUrl])
+      );
 
     // get return url from route parameters or default to '/'
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
@@ -47,9 +53,9 @@ export class LoginComponent implements OnInit {
   // convenience getter for easy access to form fields
   get f() { return this.loginForm.controls; }
 
-  signInWithGoogle(): void {
-    this.socialLogin.signIn(GoogleLoginProvider.PROVIDER_ID).then(console.log);
-  }
+  // signInWithGoogle(): void {
+  //   this.socialLogin.signIn(GoogleLoginProvider.PROVIDER_ID).then(console.log);
+  // }
 
   onSubmit() {
     this.submitted = true;
@@ -69,7 +75,6 @@ export class LoginComponent implements OnInit {
         error: response => {
           this.toastr.error(response.error.message, 'Login error', { disableTimeOut: true });
           this.loading = false;
-          console.log(response);
         }
       });
   }

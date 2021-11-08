@@ -1,10 +1,23 @@
-<img src="\assets\art-kubika-logo.png" routerLink='/' />
-<div class="right-content">
-    <cart-summary (click)="cartClick()">
-    </cart-summary>
+<nav class="navbar navbar-expand-lg navbar-light bg-info">
+    <a class="navbar-brand" routerLink="/">
+        <img style="height:56px;" src="\assets\art-kubika-logo.png" routerLink='/' />
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbarNavAltMarkup"
+        aria-controls="navbarNavAltMarkup" aria-expanded="true" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse navbarNavAltMarkup">
+        <div class="navbar-nav">
+            <a class="nav-item nav-link active" routerLink="/">Home <span class="sr-only">(current)</span></a>
+        </div>
+    </div>
+    <div class="navbar-nav navbar-right navbarNavAltMarkup">
+        <cart-summary class="nav-item" (click)="cartClick()">
+        </cart-summary>
 
-    <app-user-profile *ngIf='loggedIn | async'></app-user-profile>
-    <fa-icon icon="user" *ngIf='!(loggedIn | async)' [styles]="{ stroke: 'black', color: 'black' }" size="2x"
-        routerLink='/login'>
-    </fa-icon>
-</div>
+        <app-user-profile class="nav-item" *ngIf='(loggedIn | async)?.loggedIn!'></app-user-profile>
+        <fa-icon class="nav-item" icon="sign-in-alt" *ngIf='!(loggedIn | async)?.loggedIn!'
+            [styles]="{ stroke: 'black', color: 'black' }" size="2x" routerLink='/login'>
+        </fa-icon>
+    </div>
+</nav>

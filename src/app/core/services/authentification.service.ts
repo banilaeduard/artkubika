@@ -6,12 +6,13 @@ import { BehaviorSubject, EMPTY, Observable, tap } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthentificationService {
-  private isUserLoggedIn!: BehaviorSubject<boolean>;
+  private userInfo!: BehaviorSubject<{ loggedIn: boolean, username: string }>;
   private storage: Storage;
   private user: { username: string, jwtToken: string } = { username: '', jwtToken: '' };
+  private lastUserSync!: string;
 
   constructor(private httpClient: HttpClient) {
-    this.storage = sessionStorage;
+    this.storage = localStorage;
     this.tryReadUser();
   }
 
@@ -57,28 +58,42 @@ export class AuthentificationService {
     return this.user;
   }
 
-  public getIsUserLogged$(): Observable<boolean> {
-    return this.isUserLoggedIn.asObservable();
+  public get getUserInfo$(): Observable<{ loggedIn: boolean, username: string }> {
+    return this.userInfo.asObservable();
   }
 
   public get getIsUserLogged(): boolean {
-    return this.isUserLoggedIn.value;
+    return this.userInfo.value.loggedIn;
+  }
+
+  public syncUserWithStorage(): boolean {
+    if (this.lastUserSync !== this.storage.getItem('lastUserSync')) {
+      this.tryReadUser();
+      return true;
+    }
+
+    return false
   }
 
   private tryReadUser() {
     let userString = this.storage.getItem('user');
-
-    if (!this.isUserLoggedIn) {
-      this.isUserLoggedIn = new BehaviorSubject(!!userString);
-    } else {
-      this.isUserLoggedIn.next(!!userString);
-    }
+    this.storage.setItem('lastUserSync', Date.now().toString());
+    this.lastUserSync = this.storage.getItem('lastUserSync')!;
 
     if (userString) {
       this.user = JSON.parse(userString!);
     } else {
       this.user.jwtToken = '';
       this.user.username = '';
+    }
+
+    if (!this.userInfo) {
+      this.userInfo = new BehaviorSubject({ loggedIn: !!userString, username: this.user.username });
+    } else if (
+      this.userInfo.value.loggedIn != !!userString
+      || this.userInfo.value.username != this.user.username
+    ) {
+      this.userInfo.next({ loggedIn: !!userString, username: this.user.username });
     }
   }
 }

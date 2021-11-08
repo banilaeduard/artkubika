@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { switchMap, take } from 'rxjs';
 import { AuthentificationService } from 'src/app/core/services/authentification.service';
 
 @Component({
@@ -9,8 +8,8 @@ import { AuthentificationService } from 'src/app/core/services/authentification.
   styleUrls: ['./confirmation-email.component.less']
 })
 export class ConfirmationEmailComponent implements OnInit {
-  private token!: string;
-  private email!: string;
+  public token!: string;
+  public email!: string;
 
   constructor(
     private auth: AuthentificationService,
@@ -23,10 +22,9 @@ export class ConfirmationEmailComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.auth.confirmEmail(this.token, this.email)
-      .pipe(
-        switchMap(res => this.auth.refreshToken())
-      )
-      .subscribe(t => this.navRouter.navigate(['/']));
+    if (this.token && this.email) {
+      this.auth.confirmEmail(this.token, this.email)
+        .subscribe(t => this.navRouter.navigate(['/login']));
+    }
   }
 }
