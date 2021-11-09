@@ -14,7 +14,7 @@ export class HomeComponent implements OnInit {
       thumbImage: 'assets/kubika.jpg',
       title: 'Some random shit'
     }, {
-      image: 'assets/kubika.jpg',
+      image: 'assets/art-kubika-logo.png',
       thumbImage: 'assets/kubika.jpg',
       title: 'Some random shit'
     }, {

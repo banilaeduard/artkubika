@@ -12,7 +12,6 @@ import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontaweso
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { UserDetailsComponent } from './user-details/user-details.component';
 import { CartListItemsComponent } from './cart-list-items/cart-list-items.component';
-import { NgImageSliderModule } from 'ng-image-slider';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { OverlayModule } from '@angular/cdk/overlay';
@@ -33,7 +32,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { OverlaymenuComponent } from './core/overlaymenu/overlaymenu.component';
-import { NgbCarouselConfig, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCarouselConfig, NgbCarouselModule, NgbDatepickerModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -53,7 +52,6 @@ import { NgbCarouselConfig, NgbModule } from '@ng-bootstrap/ng-bootstrap';
     BrowserModule,
     AppRoutingModule,
     FontAwesomeModule,
-    NgImageSliderModule,
     NgScrollbarModule,
     OverlayModule,
     HttpClientModule,
@@ -71,7 +69,8 @@ import { NgbCarouselConfig, NgbModule } from '@ng-bootstrap/ng-bootstrap';
     BrowserAnimationsModule, // required animations module
     ToastrModule.forRoot(),
     ClipboardModule,
-    NgbModule,
+    NgbCarouselModule,
+    NgbDatepickerModule
   ],
   providers: [
     { provide: "BASE_API_URL", useValue: environment.baseUrl },

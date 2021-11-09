@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, Observable, of, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { UserModel } from 'src/app/models/UserModel';
 import { AuthentificationService } from './authentification.service';
 import { UserManagerService } from './user.manager.service';

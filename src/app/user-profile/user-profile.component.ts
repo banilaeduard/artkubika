@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { AuthentificationService } from '../core/services/authentification.service';
 import { OverlaymenuComponent } from '../core/overlaymenu/overlaymenu.component';
-import { filter, fromEvent, Observable, Subscription, take, tap } from 'rxjs';
+import { fromEvent, Observable, Subscription } from 'rxjs';
+import { filter, take, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-user-profile',

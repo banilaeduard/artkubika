@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { first } from 'rxjs/operators';
@@ -6,7 +6,8 @@ import { UserModel } from '../models/UserModel';
 import { ToastrService } from 'ngx-toastr';
 import { UserManagerService } from '../core/services/user.manager.service';
 import { UserContextService } from '../core/services/user-context.service';
-import { Subscription } from 'rxjs';
+import { from, Subscription } from 'rxjs';
+import { NgbDate, NgbDatepicker } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-user-details',
@@ -75,7 +76,7 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
         this.f["name"].value,
         this.f['password'].value,
         this.f['phone'].value,
-        this.f['birthday'].value,
+        new Date(new Date(0).setFullYear(this.f['birthday'].value.year, this.f['birthday'].value.month, this.f['birthday'].value.day)),
         this.f['address'].value
       );
     }
@@ -99,13 +100,18 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
     } else {
       passWordSettings = [''];
     }
+    const fromUser = new Date(this.userModel.birth);
+    const ngDate = new NgbDate(
+      fromUser?.getFullYear(),
+      fromUser?.getMonth(),
+      fromUser?.getDay());
     this.userForm = this.formBuilder.group({
       password: passWordSettings,
       confirmPassword: [],
       name: [this.userModel.name],
       email: [this.userModel.email, [Validators.email, Validators.required]],
       phone: [this.userModel.phone, [Validators.required]],
-      birthday: [this.userModel.birth],
+      birthday: [ngDate],
       address: [this.userModel.address, [Validators.required]]
     }, { validators: this.checkPasswords });
   }
