@@ -46,12 +46,15 @@
             [ngClass]="{ 'is-invalid': submitted && f.phone.errors }" />
     </div>
     <div class="form-group">
-        <div *ngIf="submitted && f.birthday.errors" class="invalid-feedback">
-            <div *ngIf="f.birthday.errors.required">Data de nastere is required</div>
-        </div>
         <label for="birthday">Data de nastere</label>
-        <input type="date" formControlName="birthday" class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.birthday.errors }" />
+        <div class="input-group">
+
+            <input id="dateOfBirth" class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker
+                #dp="ngbDatepicker" formControlName="birthday">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary calendar" (click)="dp.toggle()" type="button"></button>
+            </div>
+        </div>
     </div>
 
     <div class="form-group">

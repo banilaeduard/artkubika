@@ -103,10 +103,10 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
       password: passWordSettings,
       confirmPassword: [],
       name: [this.userModel.name],
-      email: [this.userModel.email, Validators.email],
-      phone: [this.userModel.phone, Validators.required],
+      email: [this.userModel.email, [Validators.email, Validators.required]],
+      phone: [this.userModel.phone, [Validators.required]],
       birthday: [this.userModel.birth],
-      address: [this.userModel.address]
+      address: [this.userModel.address, [Validators.required]]
     }, { validators: this.checkPasswords });
   }
 }

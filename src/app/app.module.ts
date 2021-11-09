@@ -33,6 +33,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { OverlaymenuComponent } from './core/overlaymenu/overlaymenu.component';
+import { NgbCarouselConfig, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -69,7 +70,8 @@ import { OverlaymenuComponent } from './core/overlaymenu/overlaymenu.component';
     }),
     BrowserAnimationsModule, // required animations module
     ToastrModule.forRoot(),
-    ClipboardModule
+    ClipboardModule,
+    NgbModule,
   ],
   providers: [
     { provide: "BASE_API_URL", useValue: environment.baseUrl },
@@ -105,7 +107,13 @@ import { OverlaymenuComponent } from './core/overlaymenu/overlaymenu.component';
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor(library: FaIconLibrary) {
+  constructor(library: FaIconLibrary, config: NgbCarouselConfig) {
     library.addIconPacks(fas);
+    config.interval = 0;
+    config.wrap = true;
+    config.keyboard = true;
+    config.pauseOnHover = false;
+    config.animation = false;
+    config.showNavigationIndicators = true;
   }
 }

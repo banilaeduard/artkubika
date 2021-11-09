@@ -33,3 +33,55 @@ div.form-group {
     border-color    : #285e8e;
     /*set the color you want here*/
 }
+
+button.calendar,
+button.calendar:active {
+    width              : 2.5rem;
+    height             : 2.5rem;
+    background-image   : url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAcCAYAAAAEN20fAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAOxAAADsQBlSsOGwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAEUSURBVEiJ7ZQxToVAEIY/YCHGxN6XGOIpnpaEsBSeQC9ArZbm9TZ6ADyBNzAhQGGl8Riv4BLAWAgmkpBYkH1b8FWT2WK/zJ8ZJ4qiI6XUI3ANnGKWBnht2/ZBDRK3hgVGNsCd7/ui+JkEIrKtqurLpEWaphd933+IyI3LEIdpCYCiKD6HcuOa/nwOa0ScJEnk0BJg0UTUWJRl6RxCYEzEmomsIlPU3IPW+grIAbquy+q6fluy/28RIBeRMwDXdXMgXLj/B2uimRXpui4D9sBeRLKl+1N+L+t6RwbWrZliTTTr1oxYtzVWiTQAcRxvTX+eJMnlUDaO1vpZRO5NS0x48sIwfPc87xg4B04MCzQi8hIEwe4bl1DnFMCN2zsAAAAASUVORK5CYII=') !important;
+    background-repeat  : no-repeat;
+    background-size    : 23px;
+    background-position: center;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    width: 4em;
+}
+
+.carousel-control-prev:hover {
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.carousel-control-next:hover {
+    background: rgba(0, 0, 0, 0.7);
+}
+
+ol.carousel-indicators {
+    position: absolute;
+    bottom  : 0;
+    margin  : 0;
+    left    : 0;
+    right   : 0;
+    width   : auto;
+}
+
+ol.carousel-indicators li,
+ol.carousel-indicators li.active {
+    float        : left;
+    width        : 2em;
+    height       : 0.5em;
+    margin       : 0.1em;
+    background   : lightgrey;
+    border       : solid;
+    border-width : 0.2px;
+    border-radius: 10em;
+}
+
+ol.carousel-indicators li.active {
+    background: darkslategray;
+}
+
+ol.carousel-indicators li:hover {
+    cursor: pointer;
+}
