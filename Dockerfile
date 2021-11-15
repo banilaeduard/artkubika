@@ -13,9 +13,8 @@ COPY . /app
 
 RUN npm run build --prod
 
-
 # Stage 2
 FROM nginx:stable-alpine
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build-step /app/dist/art-kubika /usr/share/nginx/html
-EXPOSE 8080
-CMD ["nginx", "-g", "daemon off;"]
+EXPOSE 4200
