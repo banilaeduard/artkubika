@@ -21,7 +21,7 @@ export class JwtTokenInterceptor implements HttpInterceptor {
 
     addAuthHeader(request: HttpRequest<any>) {
         const authHeader = this.authService.User.jwtToken;
-        const apiUrl = request.url.startsWith(this.baseUrl);
+        const apiUrl = request.url.startsWith(this.baseUrl) || request.url.startsWith(location.origin + `/${this.baseUrl}`);
         if (authHeader && apiUrl) {
             return request.clone({
                 setHeaders: {
