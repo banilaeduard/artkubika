@@ -1,6 +1,7 @@
 import { HttpRequest, HttpHandler, HttpInterceptor } from "@angular/common/http";
 import { Inject, Injectable } from "@angular/core";
 import { Router } from "@angular/router";
+import { ToastrService } from "ngx-toastr";
 import { Subject, Observable, throwError, EMPTY, of } from "rxjs";
 import { catchError, filter, switchMap, tap } from "rxjs/operators";
 import { AuthentificationService } from "src/app/core/services/authentification.service";
@@ -10,7 +11,8 @@ export class JwtTokenInterceptor implements HttpInterceptor {
     constructor(
         @Inject('BASE_API_URL') private baseUrl: string,
         private authService: AuthentificationService,
-        private router: Router) {
+        private router: Router,
+        private toastr: ToastrService) {
     }
 
     refreshTokenInProgress = false;
@@ -65,7 +67,11 @@ export class JwtTokenInterceptor implements HttpInterceptor {
     private handleResponseError(error: any, request?: HttpRequest<any>, next?: HttpHandler): any {
         // Business error
         if (error.status === 400) {
-            // Show message
+            if (Array.isArray(error.error)) {
+                error.error.forEach((element: { code: string, description: string }) => {
+                    this.toastr.error(element.description, element.code);
+                });
+            }
         }
 
         // Invalid token error

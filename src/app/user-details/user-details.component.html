@@ -70,3 +70,8 @@
         <button *ngIf="!userModel.loggedIn" class="btn btn-primary">Salveaza</button>
     </div>
 </form>
+<button *ngIf="userModel.loggedIn && !resetPassword" (click)="generateToken()" class="btn btn-secondary">Reseteaza
+    Parola</button>
+<app-reset-password *ngIf="resetPassword" [token]="token" [email]="userModel.email"
+    (emitSuccess)="passwordChanged($event)">
+</app-reset-password>

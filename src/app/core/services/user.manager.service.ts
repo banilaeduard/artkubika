@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UserModel } from 'src/app/models/UserModel';
@@ -20,15 +20,16 @@ export class UserManagerService {
     });
   }
 
-  public updateUser(user: UserModel, password: string): Observable<UserModel> {
-    return this.httpClient.post<UserModel>('users', { ...user, Password: password });
+  public updateUser(user: UserModel): Observable<UserModel> {
+    return this.httpClient.post<UserModel>('users', user);
   }
 
   public getUser(username: string): Observable<UserModel> {
     return this.httpClient.get<UserModel>(`users/${username}`);
   }
 
-  public getAllUser(): Observable<UserModel[]> {
-    return this.httpClient.get<UserModel[]>('users');
+  public generatePasswordResetToken(username: string): Observable<any> {
+    return this.httpClient.post(`users/reset-password/${username}?passwordResetUrl=${window.location.origin + '/resetPassword'}`
+      , {});
   }
 }

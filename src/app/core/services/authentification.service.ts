@@ -1,15 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthentificationService {
-  private userInfo!: BehaviorSubject<{ loggedIn: boolean, username: string }>;
+  private static userInfo: BehaviorSubject<{ loggedIn: boolean, userName: string }> =
+    new BehaviorSubject<{ loggedIn: boolean, userName: string }>({ loggedIn: false, userName: '' });
   private storage: Storage;
-  private user: { username: string, jwtToken: string } = { username: '', jwtToken: '' };
+  private user: { userName: string, jwtToken: string } = { userName: '', jwtToken: '' };
   private lastUserSync!: string;
 
   constructor(private httpClient: HttpClient) {
@@ -18,7 +19,13 @@ export class AuthentificationService {
   }
 
   public confirmEmail(token: string, email: string): Observable<any> {
-    return this.httpClient.post(`createaccount/confirmation-email?token=${encodeURIComponent(token)}&email=${email}`, {});
+    return this.httpClient.post(`createaccount/confirmation-email?token=${encodeURIComponent(token)}&email=${email}`
+      , {});
+  }
+
+  public resetPassword(token: string, email: string, password: string): Observable<any> {
+    return this.httpClient.post(`createaccount/reset-password?token=${encodeURIComponent(token)}&email=${email}`,
+      { password });
   }
 
   public login(username: string, password: string): Observable<any> {
@@ -28,7 +35,7 @@ export class AuthentificationService {
     }).pipe(
       tap((item: any) => {
         this.storage.setItem('user', JSON.stringify({
-          username: username,
+          userName: username,
           jwtToken: item.jwtToken
         }));
         this.tryReadUser();
@@ -47,7 +54,7 @@ export class AuthentificationService {
       .pipe(
         tap((response: any) => {
           this.storage.setItem('user', JSON.stringify({
-            username: response.username,
+            userName: response.username,
             jwtToken: response.jwtToken
           }));
           this.tryReadUser();
@@ -55,16 +62,16 @@ export class AuthentificationService {
       )
   }
 
-  public get User(): { username: string, jwtToken: string } {
+  public get User(): { userName: string, jwtToken: string } {
     return this.user;
   }
 
-  public get getUserInfo$(): Observable<{ loggedIn: boolean, username: string }> {
-    return this.userInfo.asObservable();
+  public get getUserInfo$(): Observable<{ loggedIn: boolean, userName: string }> {
+    return AuthentificationService.userInfo.asObservable();
   }
 
   public get getIsUserLogged(): boolean {
-    return this.userInfo.value.loggedIn;
+    return AuthentificationService.userInfo.value.loggedIn;
   }
 
   public syncUserWithStorage(): boolean {
@@ -85,16 +92,14 @@ export class AuthentificationService {
       this.user = JSON.parse(userString!);
     } else {
       this.user.jwtToken = '';
-      this.user.username = '';
+      this.user.userName = '';
     }
 
-    if (!this.userInfo) {
-      this.userInfo = new BehaviorSubject({ loggedIn: !!userString, username: this.user.username });
-    } else if (
-      this.userInfo.value.loggedIn != !!userString
-      || this.userInfo.value.username != this.user.username
+    if (
+      AuthentificationService.userInfo.value.loggedIn != !!userString
+      || AuthentificationService.userInfo.value.userName != this.user.userName
     ) {
-      this.userInfo.next({ loggedIn: !!userString, username: this.user.username });
+      AuthentificationService.userInfo.next({ loggedIn: !!userString, userName: this.user.userName });
     }
   }
 }

@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
@@ -10,14 +11,16 @@ import { UserManagerService } from './user.manager.service';
 })
 export class UserContextService {
   private user: BehaviorSubject<UserModel> = new BehaviorSubject({} as UserModel);
+
   constructor(
     private authentificationService: AuthentificationService,
-    private userManagerService: UserManagerService
+    private userManagerService: UserManagerService,
+    private httpClient: HttpClient
   ) {
     this.authentificationService.getUserInfo$
       .pipe(
         switchMap(userInfo => userInfo.loggedIn ?
-          this.userManagerService.getUser(userInfo.username)
+          this.userManagerService.getUser(userInfo.userName)
           : of({} as UserModel)
         ),
         map((userModel: UserModel) => {
@@ -35,12 +38,22 @@ export class UserContextService {
     return this.user.value;
   }
 
-  public update(name: string, password: string, phone: string, birthday: Date, address: string): void {
+  public isInRole(roles: string[]): Observable<boolean> {
+    if (!this.CurrentUser.loggedIn) return of(false);
+    return this.httpClient.post<boolean>('users/isInRoles', roles);
+  }
+
+  public generateResetPasswordToken(): Observable<string> {
+    return this.httpClient.post<{ token: string }>(`users/reset-password-form/${this.CurrentUser.userName}`
+      , {}).pipe(map(item => item.token));
+  }
+
+  public update(name: string, phone: string, birthday: Date, address: string): void {
     this.CurrentUser.name = name;
     this.CurrentUser.address = address;
     this.CurrentUser.birth = birthday;
     this.CurrentUser.phone = phone;
-    this.userManagerService.updateUser(this.CurrentUser, password)
+    this.userManagerService.updateUser(this.CurrentUser)
       .pipe(
         tap(user => this.user.next({ ...user, loggedIn: this.CurrentUser.loggedIn }))
       ).subscribe();

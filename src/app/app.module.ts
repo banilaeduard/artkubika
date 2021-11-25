@@ -33,6 +33,9 @@ import { ToastrModule } from 'ngx-toastr';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { OverlaymenuComponent } from './core/overlaymenu/overlaymenu.component';
 import { NgbCarouselConfig, NgbCarouselModule, NgbDatepickerModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ResetPasswordComponent } from './core/reset-password/reset-password.component';
+import { LoadingComponent } from './core/loading/loading.component';
+import { LoadingInterceptor } from './core/http/LoadingInterceptor';
 
 @NgModule({
   declarations: [
@@ -46,7 +49,9 @@ import { NgbCarouselConfig, NgbCarouselModule, NgbDatepickerModule, NgbModule } 
     ContextMenuComponent,
     LoginComponent,
     ConfirmationEmailComponent,
-    OverlaymenuComponent
+    ResetPasswordComponent,
+    OverlaymenuComponent,
+    LoadingComponent
   ],
   imports: [
     BrowserModule,
@@ -82,6 +87,11 @@ import { NgbCarouselConfig, NgbCarouselModule, NgbDatepickerModule, NgbModule } 
     {
       provide: HTTP_INTERCEPTORS,
       useClass: JwtTokenInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoadingInterceptor,
       multi: true,
     },
     // {

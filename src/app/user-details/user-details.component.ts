@@ -23,12 +23,28 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
 
   public submitted!: boolean;
 
+  public resetPassword!: boolean;
+
+  public token!: string;
+
   constructor(
     private userManagerService: UserManagerService,
     private userContextService: UserContextService,
     private formBuilder: FormBuilder,
     private router: Router,
     private toastr: ToastrService) {
+  }
+
+  public generateToken() {
+    if (!this.resetPassword)
+      this.userContextService.generateResetPasswordToken().subscribe(token => {
+        this.resetPassword = true;
+        this.token = token;
+      })
+  }
+
+  public passwordChanged(event: boolean) {
+    this.resetPassword = !event;
   }
 
   ngOnInit(): void {
@@ -57,7 +73,7 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
         phone: this.f['phone'].value,
         email: this.f["email"].value,
         name: this.f["name"].value,
-        username: this.f["email"].value
+        userName: this.f["email"].value
       } as UserModel, this.f['password'].value)
         .pipe(first())
         .subscribe({
@@ -68,13 +84,11 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
             response.error.forEach((error: { code: string, description: string }) => {
               this.toastr.error(error.description, error.code, { disableTimeOut: true });
             });
-            console.log(response);
           }
         });
     } else {
       this.userContextService.update(
         this.f["name"].value,
-        this.f['password'].value,
         this.f['phone'].value,
         new Date(new Date(0).setFullYear(this.f['birthday'].value.year, this.f['birthday'].value.month, this.f['birthday'].value.day)),
         this.f['address'].value

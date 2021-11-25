@@ -19,5 +19,8 @@
         <fa-icon class="nav-item" icon="sign-in-alt" *ngIf='!(loggedIn | async)?.loggedIn!'
             [styles]="{ stroke: 'black', color: 'black' }" size="2x" routerLink='/login'>
         </fa-icon>
+        <fa-icon *ngIf="isAdmin" class="nav-item" icon="user-cog" [styles]="{ stroke: 'black', color: 'black' }"
+            size="2x" routerLink='/admin'>
+        </fa-icon>
     </div>
 </nav>

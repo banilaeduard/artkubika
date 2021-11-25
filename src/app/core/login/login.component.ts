@@ -6,6 +6,7 @@ import { AuthentificationService } from 'src/app/core/services/authentification.
 import { GoogleLoginProvider, SocialAuthService } from 'angularx-social-login';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
+import { UserManagerService } from '../services/user.manager.service';
 
 
 @Component({
@@ -25,6 +26,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private authenticationService: AuthentificationService,
+    private userManagerService: UserManagerService,
     // private socialLogin: SocialAuthService,
     private toastr: ToastrService
   ) {
@@ -77,5 +79,9 @@ export class LoginComponent implements OnInit, OnDestroy {
           this.loading = false;
         }
       });
+  }
+
+  resetPassword() {
+    this.userManagerService.generatePasswordResetToken(this.f['username'].value).subscribe(console.log);
   }
 }
