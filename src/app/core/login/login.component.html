@@ -21,10 +21,10 @@
             <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
             Login
         </button>
-        <button routerLink="/user" class="btn btn-primary">
+        <button routerLink="/register" class="btn btn-primary">
             Register
         </button>
-        <button (click)="resetPassword()" routerLink="/" class="btn btn-secondary">
+        <button (click)="resetPassword($event)" routerLink="/" class="btn btn-secondary">
             Reset password
         </button>
     </div>

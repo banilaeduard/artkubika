@@ -7,7 +7,10 @@ import { UserModel } from "src/app/models/UserModel";
     providedIn: "root"
 })
 export class UsersDetailsService {
-    constructor(private httpClient: HttpClient) { }
+
+    constructor(
+        private httpClient: HttpClient
+    ) { }
 
     public getUsers(page: number, size: number): Observable<{ count: number, users: UserModel[] }> {
         return this.httpClient.get<any>(`usermanager/users/${page}/${size}`);

@@ -1,6 +1,6 @@
 import { Component, Input, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { switchMap, tap } from 'rxjs/operators';
 import { AuthentificationService } from 'src/app/core/services/authentification.service';
@@ -22,22 +22,25 @@ export class ResetPasswordComponent {
 
   public userForm!: FormGroup;
   public submitted!: boolean;
+  private params: boolean = false;
 
   constructor(
     private auth: AuthentificationService,
     private toastr: ToastrService,
     private route: ActivatedRoute,
+    private router: Router,
     private formBuilder: FormBuilder) {
 
     this.route.queryParams.subscribe(params => {
       if (params['token']) {
         this.token = params['token'];
+        this.params = true;
       }
       if (params['email']) {
         this.email = params['email'];
       }
     });
-    this.initUserForm()
+    this.initUserForm();
   }
 
   get f() { return this.userForm.controls; }
@@ -56,7 +59,10 @@ export class ResetPasswordComponent {
         switchMap(_ => this.auth.login(_.user, this.f['password'].value))
       )
       .subscribe(_ => {
-        this.emitSuccess.emit(true);
+        if (this.params)
+          this.router.navigate(['/']);
+        else
+          this.emitSuccess.emit(true);
       });
   }
 

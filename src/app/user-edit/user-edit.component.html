@@ -1,0 +1,11 @@
+<h2>Edit User</h2>
+<app-user-details #details [userModel]="userModel" [showPassword]="false" (message)="process($event)">
+</app-user-details>
+<div class="form-group">
+    <button (click)="details.onSubmit()" class="btn btn-primary">Salveaza</button>
+</div>
+<button *ngIf="userModel.loggedIn && !resetPassword" (click)="generateToken()" class="btn btn-secondary">Reseteaza
+    Parola</button>
+<app-reset-password *ngIf="resetPassword" [token]="token" [email]="userModel.email"
+    (emitSuccess)="passwordChanged($event)">
+</app-reset-password>

@@ -1,0 +1,11 @@
+<!-- Modal content -->
+<div class="modal-content">
+    <div class="modal-header">
+        <fa-icon (click)="close(false)" icon="times" [styles]="{ stroke: 'black', color: 'black' }" size="2x">
+        </fa-icon>
+        <h3>{{context.data?.header}}</h3>
+    </div>
+    <div class="modal-body">
+        <ng-container *cdkPortalOutlet></ng-container>
+    </div>
+</div>

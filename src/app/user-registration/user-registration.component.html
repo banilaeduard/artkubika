@@ -1,0 +1,6 @@
+<h2>Register</h2>
+<app-user-details #details [userModel]="{}" (message)="process($event)">
+</app-user-details>
+<div class="form-group">
+    <button (click)="details.onSubmit()" class="btn btn-primary">Salveaza</button>
+</div>

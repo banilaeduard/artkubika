@@ -6,11 +6,13 @@ import { ConfirmationEmailComponent } from './core/confirmation-email/confirmati
 import { LoginComponent } from './core/login/login.component';
 import { ResetPasswordComponent } from './core/reset-password/reset-password.component';
 import { HomeComponent } from './home/home.component';
-import { UserDetailsComponent } from './user-details/user-details.component';
+import { UserEditComponent } from './user-edit/user-edit.component';
+import { UserRegistrationComponent } from './user-registration/user-registration.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'user', component: UserDetailsComponent },
+  { path: 'user', component: UserEditComponent },
+  { path: 'register', component: UserRegistrationComponent },
   { path: 'cartitems', component: CartListItemsComponent },
   { path: 'login', component: LoginComponent },
   { path: 'confirmationEmail', component: ConfirmationEmailComponent },

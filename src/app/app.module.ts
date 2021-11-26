@@ -10,12 +10,10 @@ import { HomeComponent } from './home/home.component';
 
 import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';
-import { UserDetailsComponent } from './user-details/user-details.component';
 import { CartListItemsComponent } from './cart-list-items/cart-list-items.component';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { OverlayModule } from '@angular/cdk/overlay';
-import { ContextMenuComponent } from './core/context-menu/context-menu.component';
 import { environment } from 'src/environments/environment';
 import { BaseUrlInterceptor } from './core/http/BaseUrlInterceptor';
 import { LoginComponent } from './core/login/login.component';
@@ -31,11 +29,16 @@ import { BaseCartItem, ShoppingCartModule } from 'ng-shopping-cart';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { ClipboardModule } from '@angular/cdk/clipboard';
-import { OverlaymenuComponent } from './core/overlaymenu/overlaymenu.component';
+import { OverlaymenuComponent } from './common/overlaymenu/overlaymenu.component';
 import { NgbCarouselConfig, NgbCarouselModule, NgbDatepickerModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ResetPasswordComponent } from './core/reset-password/reset-password.component';
 import { LoadingComponent } from './core/loading/loading.component';
 import { LoadingInterceptor } from './core/http/LoadingInterceptor';
+import { DialogOverlayComponent } from './core/dialog-overlay/dialog-overlay.component';
+import { CommonProjectModule } from './common/common-project.module';
+import { PortalModule } from '@angular/cdk/portal';
+import { UserRegistrationComponent } from './user-registration/user-registration.component';
+import { UserEditComponent } from './user-edit/user-edit.component';
 
 @NgModule({
   declarations: [
@@ -43,15 +46,15 @@ import { LoadingInterceptor } from './core/http/LoadingInterceptor';
     AppHeaderComponent,
     AppFooterComponent,
     HomeComponent,
-    UserDetailsComponent,
     CartListItemsComponent,
     UserProfileComponent,
-    ContextMenuComponent,
     LoginComponent,
     ConfirmationEmailComponent,
     ResetPasswordComponent,
-    OverlaymenuComponent,
-    LoadingComponent
+    LoadingComponent,
+    DialogOverlayComponent,
+    UserRegistrationComponent,
+    UserEditComponent
   ],
   imports: [
     BrowserModule,
@@ -74,8 +77,11 @@ import { LoadingInterceptor } from './core/http/LoadingInterceptor';
     BrowserAnimationsModule, // required animations module
     ToastrModule.forRoot(),
     ClipboardModule,
+    NgbModule,
     NgbCarouselModule,
-    NgbDatepickerModule
+    NgbDatepickerModule,
+    CommonProjectModule,
+    PortalModule
   ],
   providers: [
     { provide: "BASE_API_URL", useValue: environment.baseUrl },
