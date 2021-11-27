@@ -19,7 +19,10 @@ export class UserEditComponent implements OnDestroy {
   constructor(
     private userContextService: UserContextService,
     private toastr: ToastrService) {
-    this.sub = this.userContextService.CurrentUser$.subscribe(_user => this.userModel = _user);
+    this.sub = this.userContextService.CurrentUser$.subscribe(_user => {
+      console.log(_user);
+      this.userModel = _user;
+    });
   }
 
   ngOnDestroy(): void {
@@ -39,7 +42,6 @@ export class UserEditComponent implements OnDestroy {
   }
 
   process($event: any) {
-    console.log($event);
     if ($event.success) {
       const user = $event.user as UserModel;
       this.userContextService.update(

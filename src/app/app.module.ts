@@ -29,7 +29,6 @@ import { BaseCartItem, ShoppingCartModule } from 'ng-shopping-cart';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { ClipboardModule } from '@angular/cdk/clipboard';
-import { OverlaymenuComponent } from './common/overlaymenu/overlaymenu.component';
 import { NgbCarouselConfig, NgbCarouselModule, NgbDatepickerModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ResetPasswordComponent } from './core/reset-password/reset-password.component';
 import { LoadingComponent } from './core/loading/loading.component';

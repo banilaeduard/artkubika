@@ -1,8 +1,6 @@
 import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { AuthentificationService } from '../core/services/authentification.service';
-import { fromEvent, Observable, Subscription } from 'rxjs';
-import { filter, take, tap } from 'rxjs/operators';
-import { OverlaymenuComponent } from '../common/overlaymenu/overlaymenu.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-user-profile',
@@ -10,24 +8,11 @@ import { OverlaymenuComponent } from '../common/overlaymenu/overlaymenu.componen
   styleUrls: ['./user-profile.component.less']
 })
 export class UserProfileComponent implements OnInit, OnDestroy {
-  @ViewChild('userMenu') userMenu!: OverlaymenuComponent;
-  @ViewChild('template') template!: TemplateRef<any>;
-  private currentTarget!: HTMLElement;
-  private toggle!: boolean;
-
+  public pos: { x?: number, y?: number } = { y: 56 };
   public user!: string;
-  public closeCond!: Observable<any>;
   public sub!: Subscription;
 
   constructor(public authService: AuthentificationService) {
-    this.closeCond = fromEvent<MouseEvent>(document, 'click')
-      .pipe(
-        filter(event =>
-          this.currentTarget != event.target
-        ),
-        tap(_ => this.toggle = false),
-        take(1)
-      );
   }
 
   ngOnInit(): void {
@@ -36,18 +21,5 @@ export class UserProfileComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.sub && this.sub.unsubscribe();
-    this.userMenu.close();
-  }
-
-  open(ev: MouseEvent) {
-    this.toggle = !this.toggle;
-    if (this.toggle) {
-      this.currentTarget = ev.target as HTMLElement;
-      const targetPos = this.currentTarget.getBoundingClientRect();
-      this.userMenu.open(targetPos.x + targetPos.width, 56);
-    } else {
-      this.userMenu.close();
-      this.toggle = false;
-    }
   }
 }

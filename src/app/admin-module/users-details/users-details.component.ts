@@ -19,15 +19,11 @@ export class UsersDetailsComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.userDetailsService.getUsers(1, 20).pipe(
-            tap(console.log)
-        ).subscribe(model => this.users = model.users);
+        this.syncUsers();
     }
 
     public deleteUser = (user: UserModel): void => {
-        this.dialogOverlayService.open(this.createUserTemplate,
-            { model: {} as UserModel, data: {} }
-            , undefined);
+        this.userDetailsService.deteleUser(user.userName).subscribe(this.syncUsers);;
     }
 
     public editUser = (user: UserModel): void => {
@@ -43,7 +39,7 @@ export class UsersDetailsComponent implements OnInit {
         const ref = this.dialogOverlayService.open(this.createUserTemplate,
             {
                 model: {} as UserModel,
-                data: { header: 'Create user', showPassword: true, create: true },
+                data: { header: 'Create user', showPassword: false, create: true },
             }
             , undefined);
     }
@@ -51,8 +47,17 @@ export class UsersDetailsComponent implements OnInit {
 
     public process(event: any, done: (x: boolean) => void, create: boolean) {
         if (event.success) {
-            console.log(event.user);
-            done(true);
+            if (create)
+                this.userDetailsService.createUser(event.user).pipe(tap(_ => done(true))).subscribe(this.syncUsers);
+            else
+                this.userDetailsService.updateUser(event.user).pipe(tap(_ => done(true))).subscribe(this.syncUsers);
+            ;
         }
+    }
+
+    private syncUsers = () => {
+        this.userDetailsService.getUsers(1, 20).pipe(
+            tap(console.log)
+        ).subscribe(model => this.users = model.users);
     }
 }

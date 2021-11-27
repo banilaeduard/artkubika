@@ -1,38 +1,42 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
-import { Component, Input, OnDestroy, OnInit, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Component, Input, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
+import { fromEvent, Subscription } from 'rxjs';
+import { skip, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-overlaymenu',
-  templateUrl: './overlaymenu.component.html',
+  template: '',
   styleUrls: []
 })
-export class OverlaymenuComponent implements OnInit, OnDestroy {
+export class OverlaymenuComponent implements OnDestroy {
   @Input() template!: TemplateRef<any>;
-  @Input() closeCondition!: Observable<any>;
+  @Input() overridePosition!: { x: number, y: number };
 
   private sub!: Subscription;
   private overlayRef!: OverlayRef | null;
-  private isOpened!: boolean;
 
-  constructor(public overlay: Overlay,
-    public viewContainerRef: ViewContainerRef) { }
-
-  ngOnInit(): void {
-  }
+  constructor(
+    public overlay: Overlay,
+    public viewContainerRef: ViewContainerRef
+  ) { }
 
   ngOnDestroy(): void {
     this.close();
   }
 
-  public open(x: number, y: number) {
-    this.close();
+  public openFromTarget(target: HTMLElement, context?: any) {
+    const targetPos = target.getBoundingClientRect();
+    this.open(targetPos.x + targetPos.width, targetPos.y + targetPos.height, context);
+    this.sub = fromEvent<MouseEvent>(document, 'click').pipe(skip(1), take(1)).subscribe(t => this.close());
+  }
 
+  public open(x: number, y: number, context?: any) {
+    this.close();
     const positionStrategy = this.overlay.position()
       .flexibleConnectedTo({
-        x: x,
-        y: y
+        x: this.overridePosition?.x || x,
+        y: this.overridePosition?.y || y
       })
       .withPositions([
         {
@@ -48,21 +52,10 @@ export class OverlaymenuComponent implements OnInit, OnDestroy {
       scrollStrategy: this.overlay.scrollStrategies.close()
     });
 
-    this.overlayRef.attach(new TemplatePortal(this.template, this.viewContainerRef, {}));
-    this.sub = this.closeCondition && this.closeCondition.subscribe(t => this.close());
-    this.isOpened = true;
-  }
-
-  public containsElement(element: HTMLElement) {
-    return !!this.overlayRef && this.overlayRef.overlayElement.contains(element);
-  }
-
-  public get IsOpened(): boolean {
-    return this.isOpened;
+    this.overlayRef.attach(new TemplatePortal(this.template, this.viewContainerRef, { $implicit: context }));
   }
 
   public close() {
-    this.isOpened = false;
     this.sub && this.sub.unsubscribe();
     if (this.overlayRef) {
       this.overlayRef.dispose();

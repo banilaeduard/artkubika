@@ -15,6 +15,7 @@ export class AppComponent implements OnInit {
     private toastr: ToastrService,
     private authService: AuthentificationService
   ) {
+    this.authService.syncUserWithStorage();
   }
 
   ngOnInit(): void {

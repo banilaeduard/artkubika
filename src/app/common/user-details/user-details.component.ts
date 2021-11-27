@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
 import { UserModel } from 'src/app/models/UserModel';
@@ -8,7 +8,7 @@ import { UserModel } from 'src/app/models/UserModel';
   templateUrl: './user-details.component.html',
   styleUrls: ['./user-details.component.less']
 })
-export class UserDetailsComponent implements OnInit {
+export class UserDetailsComponent implements OnInit, OnChanges {
   @Input() userModel!: UserModel;
   @Input() showPassword: boolean = true;
   @Output() message: EventEmitter<any> = new EventEmitter();
@@ -17,6 +17,11 @@ export class UserDetailsComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder) {
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.userModel) {
+      this.initUserForm();
+    }
   }
 
   ngOnInit(): void {

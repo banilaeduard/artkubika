@@ -21,10 +21,13 @@
             <td>{{user.phone}}</td>
             <td>{{user.address}}</td>
             <td *ngIf="user.userName !== 'admin'">
-                <fa-icon (click)="editUser(user)" icon="edit" [styles]="{ stroke: 'black', color: 'black' }" size="2x">
+                <fa-icon (click)="editUser(user)" icon="edit" [styles]="{ stroke: 'black', color: 'black' }" size="1x">
                 </fa-icon>
                 <fa-icon (click)="deleteUser(user)" icon="trash-alt" [styles]="{ stroke: 'black', color: 'black' }"
-                    size="2x">
+                    size="1x">
+                </fa-icon>
+                <fa-icon icon="align-justify" #element [styles]="{ stroke: 'black', color: 'black' }" size="1x"
+                    [spin]="false" (click)="userMenu.openFromTarget($event.target, user)">
                 </fa-icon>
             </td>
         </tr>
@@ -40,3 +43,17 @@
         <button *ngIf="!data.create" (click)="details.onSubmit();" class="btn btn-primary">Updateaza</button>
     </div>
 </ng-template>
+
+<app-overlaymenu [template]="template" #userMenu>
+    <ng-template #template let-user>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <ul class="user-menu navbar-nav mr-auto">
+                <span class="navbar-text" [cdkCopyToClipboard]="user.userName">
+                    {{user.userName}}
+                </span>
+                <button class="btn nav-item btn-info btn-sm bg-light" routerLink="/user">Go to profile</button>
+                <button class="btn nav-item btn-info btn-sm bg-light" routerLink="/login">Logout</button>
+            </ul>
+        </nav>
+    </ng-template>
+</app-overlaymenu>

@@ -1,3 +1,4 @@
+import { ClipboardModule } from '@angular/cdk/clipboard';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
@@ -18,6 +19,7 @@ const routes: Routes = [
         CommonModule,
         FontAwesomeModule,
         CommonProjectModule,
+        ClipboardModule,
         RouterModule.forChild(routes)
     ],
     exports: [RouterModule],
