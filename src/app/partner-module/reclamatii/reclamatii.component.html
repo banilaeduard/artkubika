@@ -30,17 +30,18 @@
                     </thead>
                     <tbody>
                         <tr *ngFor="let ticket of item.tickets; index as i">
-                            <th scope="row">{{i + 1}}</th>
-                            <td>
-                                {{ticket.codeValue}}
+                            <td style="width: 15%;" scope="row">{{i + 1}}</td>
+                            <td style="width: 25%;">
+                                {{ticket.code?.display}}
                             </td>
-                            <td>{{ticket.description}}</td>
-                            <td *ngIf='ticket.images?.length > 0'>
-                                <fa-icon class="nav-item" icon="paperclip" [styles]="{ stroke: 'gray', color: 'gray' }">
+                            <td style="width: 55%;">{{ticket.description}}</td>
+                            <td *ngIf='ticket.images?.length > 0' style="width: 15%;">
+                                <fa-icon (click)="editTicket(item, ticket)" class="nav-item" icon="paperclip"
+                                    [styles]="{ stroke: 'gray', color: 'gray' }">
                                 </fa-icon>
                                 Imagini atasate
                             </td>
-                            <td *ngIf='ticket.images?.length == 0'></td>
+                            <td *ngIf='ticket.images?.length == 0' style="width: 15%;"></td>
                         </tr>
                     </tbody>
                 </table>
@@ -50,7 +51,7 @@
 </table>
 
 <ng-template #reclamatie let-complaint let-data="data" let-done="done">
-    <app-reclamatie #rec>
+    <app-reclamatie [item]="data.ticket" #rec>
     </app-reclamatie>
     <div class="form-group">
         <button (click)="save(rec.get(), complaint,done)" class="btn btn-primary">Salveaza</button>

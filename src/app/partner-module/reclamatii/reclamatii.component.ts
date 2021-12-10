@@ -27,12 +27,18 @@ export class ReclamatiiComponent implements OnInit {
     this.dialogOverlayService.open(this.addTicketTemplate, { model: complaint, data: { header: 'Reclamatie componenta' } }, undefined);
   }
 
+  editTicket(complaint: ComplaintModel, ticket: Ticket) {
+    this.dialogOverlayService.open(this.addTicketTemplate, { model: complaint, data: { header: 'Reclamatie componenta', ticket: ticket } }, undefined);
+  }
+
   addComplaint() {
     this.complaints.unshift({ id: '0', tickets: [] } as ComplaintModel);
   }
 
   save(ticket: Ticket, complaint: ComplaintModel, done: () => boolean) {
-    complaint.tickets.push(ticket);
+    if (!parseInt(ticket.id)) {
+      complaint.tickets.push(ticket);
+    }
     this.complaintService.save(complaint).pipe(
       tap(item => {
         complaint.id = item.id;

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { CodeModel } from 'src/app/models/CodeModel';
 import { Ticket } from 'src/app/models/Ticket';
 import { CodesService } from '../codes.service';
@@ -8,23 +8,34 @@ import { CodesService } from '../codes.service';
   templateUrl: './reclamatie.component.html',
   styleUrls: ['./reclamatie.component.less']
 })
-export class ReclamatieComponent implements OnInit {
+export class ReclamatieComponent implements OnInit, OnChanges {
   items!: CodeModel[];
+  @Input() item: Ticket;
+
   selectedItem: CodeModel | undefined;
-  description: string | undefined;
-  imagesSrc: { data: string, title: string, id: string }[] = [];
-  constructor(private codesService: CodesService) { }
+  constructor(private codesService: CodesService) {
+    this.item = {} as Ticket;
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.item) {
+      this.item = changes.item.currentValue || {};
+      if (!this.item.images) this.item.images = [];
+    }
+  }
 
   ngOnInit(): void {
     this.codesService.getCodes().subscribe(codes => this.items = codes);
   }
 
   selectItem(id: string) {
-    this.selectedItem = this.items.find(item => item.id === id);
+    const code = this.items.find(item => item.id === id)!
+    this.item.code = { ...code, id: '0' };
+    this.item.codeValue = code.value;
   }
 
   delete(index: number) {
-    this.imagesSrc.splice(index, 1);
+    this.item.images.splice(index, 1);
   }
 
   onFileChange(event: any) {
@@ -33,19 +44,14 @@ export class ReclamatieComponent implements OnInit {
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = () => {
-          this.imagesSrc.push({ data: reader.result as string, title: file.name, id: '0' });
+          this.item.images.push({ data: reader.result as string, title: file.name, id: '0' });
         };
       }
     }
   }
 
   get(): Ticket {
-    return {
-      code: { ...this.selectedItem!, id: '0' },
-      codeValue: this.selectedItem?.value!,
-      description: this.description!,
-      images: this.imagesSrc!,
-      id: '0'
-    } as Ticket
+    this.item.id = this.item.id ?? '0';
+    return this.item;
   }
 }
