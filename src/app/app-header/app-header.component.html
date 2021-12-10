@@ -10,10 +10,18 @@
         <div class="navbar-nav">
             <a class="nav-item nav-link active" routerLink="/">Home <span class="sr-only">(current)</span></a>
         </div>
+        <div class="navbar-nav">
+            <a class="nav-item nav-link active" *ngIf="isAdmin || isPartner" routerLink="/partner">Reclamatii<span
+                    class="sr-only">(current)</span></a>
+        </div>
+        <div class="navbar-nav">
+            <a class="nav-item nav-link active" *ngIf="isAdmin" routerLink="/admin/managecodes">Manage codes<span
+                    class="sr-only">(current)</span></a>
+        </div>
     </div>
     <div class="navbar-nav navbar-right navbarNavAltMarkup">
-        <cart-summary class="nav-item" (click)="cartClick()">
-        </cart-summary>
+        <!-- <cart-summary class="nav-item" (click)="cartClick()">
+        </cart-summary> -->
 
         <app-user-profile class="nav-item" *ngIf='(loggedIn | async)?.loggedIn!'></app-user-profile>
         <fa-icon class="nav-item" icon="sign-in-alt" *ngIf='!(loggedIn | async)?.loggedIn!'

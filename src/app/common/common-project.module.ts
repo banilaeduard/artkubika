@@ -3,9 +3,11 @@ import { PortalModule } from '@angular/cdk/portal';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDatepickerModule, NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { OverlaymenuComponent } from './overlaymenu/overlaymenu.component';
 import { UserDetailsComponent } from './user-details/user-details.component';
+import { DropdownComponent } from './dropdown/dropdown.component';
+import { NgScrollbarModule } from 'ngx-scrollbar';
 
 @NgModule({
     imports: [
@@ -15,10 +17,11 @@ import { UserDetailsComponent } from './user-details/user-details.component';
         FormsModule,
         ReactiveFormsModule,
         NgbDatepickerModule,
+        NgbDropdownModule,
+        NgScrollbarModule
     ],
-    exports: [OverlaymenuComponent, UserDetailsComponent],
-    declarations: [OverlaymenuComponent, UserDetailsComponent]
+    exports: [OverlaymenuComponent, UserDetailsComponent, DropdownComponent],
+    declarations: [OverlaymenuComponent, UserDetailsComponent, DropdownComponent]
 })
 export class CommonProjectModule {
-
 }

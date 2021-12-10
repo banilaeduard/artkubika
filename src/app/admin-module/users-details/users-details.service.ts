@@ -25,10 +25,23 @@ export class UsersDetailsService {
     }
 
     public createUser(userModel: UserModel): Observable<UserModel> {
-        return this.httpClient.post<UserModel>(`usermanager?resetUrl=${window.location.origin + '/resetPassword'}`, userModel);
+        return this.httpClient.post<UserModel>(`usermanager?resetUrl=${encodeURIComponent(window.location.origin + '/resetPassword')}`, userModel);
     }
 
     public updateUser(userModel: UserModel): Observable<UserModel> {
         return this.httpClient.patch<UserModel>(`usermanager`, userModel);
+    }
+
+    public addUserToRole(userName: string, role: string): Observable<any> {
+        console.log({ userName, role });
+        return this.httpClient.post(`usermanager/add-to-role/${userName}?role=${role}`, {});
+    }
+
+    public removeUserFromRole(userName: string, role: string): Observable<any> {
+        return this.httpClient.post(`usermanager/remove-role/${userName}?role=${role}`, { userName, role });
+    }
+
+    public getUserRoles(username: string): Observable<string[]> {
+        return this.httpClient.get<string[]>(`usermanager/roles/${username}`, {});
     }
 }

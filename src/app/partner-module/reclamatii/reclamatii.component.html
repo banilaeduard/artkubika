@@ -1,0 +1,58 @@
+<table class="table table-striped table-hover" style="width: 100v;">
+    <thead>
+        <tr>
+            <th scope="col" style="width: 10%;"># Reclamatii</th>
+            <th scope="col" style="width: 70%;">
+            </th>
+            <th style="width: 15%;">Adauga o reclamatie
+                <fa-icon (click)="addComplaint()" class="nav-item" icon="plus-square"
+                    [styles]="{ stroke: 'black', color: 'black' }" size="2x">
+                </fa-icon>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let item of complaints; index as i">
+            <td style="width: 10%;" scope="row">{{i + 1}}</td>
+            <td>
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col" style="width: 15%;"># Componente</th>
+                            <th scope="col" style="width: 25%;">Name</th>
+                            <th scope="col" style="width: 55%;">Description</th>
+                            <th scope="col" style="width: 15%;">Adauga
+                                <fa-icon (click)="addTicket(item)" class="nav-item" icon="plus-square"
+                                    [styles]="{ stroke: 'gray', color: 'gray' }">
+                                </fa-icon>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let ticket of item.tickets; index as i">
+                            <th scope="row">{{i + 1}}</th>
+                            <td>
+                                {{ticket.codeValue}}
+                            </td>
+                            <td>{{ticket.description}}</td>
+                            <td *ngIf='ticket.images?.length > 0'>
+                                <fa-icon class="nav-item" icon="paperclip" [styles]="{ stroke: 'gray', color: 'gray' }">
+                                </fa-icon>
+                                Imagini atasate
+                            </td>
+                            <td *ngIf='ticket.images?.length == 0'></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<ng-template #reclamatie let-complaint let-data="data" let-done="done">
+    <app-reclamatie #rec>
+    </app-reclamatie>
+    <div class="form-group">
+        <button (click)="save(rec.get(), complaint,done)" class="btn btn-primary">Salveaza</button>
+    </div>
+</ng-template>

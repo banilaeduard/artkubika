@@ -1,0 +1,14 @@
+<div ngbDropdown [autoClose]="true">
+    <button style="min-width: 15vw;" ngbDropdownToggle class="btn nav-item btn-info btn-sm bg-light">{{title}}</button>
+    <div ngbDropdownMenu>
+        <div class="md-form">
+            <input placeholder="Search" type="search" class="form-control" id="input1" [(ngModel)]="searchValue"
+                (keyup)="filterItems()">
+        </div>
+        <ng-scrollbar #scrollable id="content" [track]="'all'">
+            <a class="dropdown-item" (click)="clicked(item.id)" *ngFor="let item of filterItems()">
+                {{item.display}}
+            </a>
+        </ng-scrollbar>
+    </div>
+</div>

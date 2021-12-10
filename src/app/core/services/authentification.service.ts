@@ -36,7 +36,7 @@ export class AuthentificationService {
       tap((item: any) => {
         this.storage.setItem('user', JSON.stringify({
           userName: username,
-          jwtToken: item.jwtToken
+          jwtToken: item?.jwtToken
         }));
         this.tryReadUser();
       })

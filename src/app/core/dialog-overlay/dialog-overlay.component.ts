@@ -1,5 +1,5 @@
 import { CdkPortalOutlet, PortalOutlet, TemplatePortal } from '@angular/cdk/portal';
-import { AfterContentInit, Component, Inject, Input, OnDestroy, OnInit, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
+import { AfterContentInit, Component, Inject, OnDestroy, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { DialogOverlayRef } from '../services/dialog-overlay.service';
 
 @Component({
@@ -21,7 +21,7 @@ export class DialogOverlayComponent<T> implements AfterContentInit, OnDestroy {
   }
 
   ngAfterContentInit(): void {
-    const templatePortal = new TemplatePortal<any>(this.templateRef, this.viewContainerRef, { $implicit: this.context.model, data: this.context.data, done: (x: boolean) => this.close(x) });
+    const templatePortal = new TemplatePortal<any>(this.templateRef, this.viewContainerRef, { $implicit: this.context?.model, data: this.context?.data, done: (x: boolean) => this.close(x) });
     this.portalOutlet.attach(templatePortal);
   }
 

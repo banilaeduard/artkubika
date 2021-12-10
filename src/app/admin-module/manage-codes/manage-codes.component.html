@@ -1,0 +1,35 @@
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Display</th>
+            <th scope="col">Value</th>
+            <th scope="col">
+                <fa-icon (click)="addCode()" class="nav-item" icon="plus-square"
+                    [styles]="{ stroke: 'black', color: 'black' }" size="2x">
+                </fa-icon>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let code of codes; index as i">
+            <th scope="row">{{i + 1}}</th>
+            <td>
+                <input type="text" (input)="code.dirty = true" [(ngModel)]="code.display" class="form-control" />
+            </td>
+            <td><input type="text" (input)="code.dirty = true" [(ngModel)]="code.value" class="form-control" /></td>
+            <td>
+                <fa-icon (click)="remove(i)" icon="times" [styles]="{ stroke: 'black', color: 'black' }" size="2x">
+                </fa-icon>
+            </td>
+            <td>
+                <fa-icon *ngIf="!code.display || !code.value || !code.dirty" icon="check"
+                    [styles]="{ stroke: 'black', color: 'gray' }" size="2x">
+                </fa-icon>
+                <fa-icon *ngIf="!!code.display && !!code.value && !!code.dirty" (click)="save(i)" icon="check"
+                    [styles]="{ stroke: 'black', color: 'green' }" size="2x">
+                </fa-icon>
+            </td>
+        </tr>
+    </tbody>
+</table>

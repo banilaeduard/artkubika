@@ -45,7 +45,6 @@ export class UserDetailsComponent implements OnInit, OnChanges {
       success: true,
       user: {
         address: this.f['address'].value,
-        birth: new Date(this.f['birthday'].value),
         phone: this.f['phone'].value,
         email: this.f["email"].value,
         name: this.f["name"].value,
@@ -70,19 +69,16 @@ export class UserDetailsComponent implements OnInit, OnChanges {
     } else {
       passWordSettings = [''];
     }
-    const fromUser = new Date(this.userModel.birth);
-    const ngDate = new NgbDate(
-      fromUser?.getFullYear(),
-      fromUser?.getMonth(),
-      fromUser?.getDay());
+
     this.userForm = this.formBuilder.group({
       password: passWordSettings,
       confirmPassword: [],
       name: [this.userModel.name],
       email: [this.userModel.email, [Validators.email, Validators.required]],
       phone: [this.userModel.phone, [Validators.required]],
-      birthday: [ngDate],
       address: [this.userModel.address, [Validators.required]]
     }, { validators: this.checkPasswords });
+
+    this.userForm.reset(this.userForm.value);
   }
 }

@@ -14,6 +14,7 @@ export class AppHeaderComponent implements OnInit {
   public loggedIn!: Observable<{ loggedIn: boolean, userName: string }>;
   public user!: Observable<string>;
   public isAdmin!: boolean;
+  public isPartner!: boolean;
 
   constructor(authService: AuthentificationService,
     private router: Router,
@@ -22,8 +23,11 @@ export class AppHeaderComponent implements OnInit {
 
     userContextService.CurrentUser$.pipe(
       switchMap(_ => userContextService.isInRole(['admin']))
-    )
-      .subscribe(t => this.isAdmin = t);
+    ).subscribe(t => this.isAdmin = t);
+
+    userContextService.CurrentUser$.pipe(
+      switchMap(_ => userContextService.isInRole(['partener']))
+    ).subscribe(t => this.isPartner = t);
   }
 
   ngOnInit(): void {

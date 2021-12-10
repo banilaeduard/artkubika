@@ -13,6 +13,7 @@ import { UsersDetailsService } from './users-details.service';
 export class UsersDetailsComponent implements OnInit {
     public users: UserModel[] = [];
     @ViewChild('createUser') createUserTemplate!: TemplateRef<UserModel>;
+    @ViewChild('editRolesTemplate') editRolesTemplate!: TemplateRef<UserModel>;
 
     constructor(private userDetailsService: UsersDetailsService,
         private dialogOverlayService: DialogOverlayService) {
@@ -23,7 +24,18 @@ export class UsersDetailsComponent implements OnInit {
     }
 
     public deleteUser = (user: UserModel): void => {
-        this.userDetailsService.deteleUser(user.userName).subscribe(this.syncUsers);;
+        this.userDetailsService.deteleUser(user.userName).subscribe(this.syncUsers);
+    }
+
+    public editRoles = (user: UserModel): void => {
+        this.userDetailsService.getUserRoles(user.userName).pipe(tap(console.log)).subscribe(roles =>
+            this.dialogOverlayService.open(this.editRolesTemplate,
+                {
+                    model: user,
+                    data: { header: `${user.userName}`, roles: roles }
+                }
+                , undefined)
+        );
     }
 
     public editUser = (user: UserModel): void => {
@@ -53,6 +65,16 @@ export class UsersDetailsComponent implements OnInit {
                 this.userDetailsService.updateUser(event.user).pipe(tap(_ => done(true))).subscribe(this.syncUsers);
             ;
         }
+    }
+
+    public updateRoles(userName: string, roles: { remove?: string[], add?: string[] }, done: (x: boolean) => void) {
+        if (roles?.remove) {
+            this.userDetailsService.removeUserFromRole(userName, roles.remove![0]).subscribe(_ => done(true));
+        }
+        if (roles?.add) {
+            this.userDetailsService.addUserToRole(userName, roles.add![0]).subscribe(_ => done(true));
+        }
+
     }
 
     private syncUsers = () => {

@@ -44,6 +44,13 @@
     </div>
 </ng-template>
 
+<ng-template #editRolesTemplate let-user let-data="data" let-done="done">
+    <app-edit-roles #roles [roles]="data.roles"></app-edit-roles>
+    <div class="form-group">
+        <button (click)="updateRoles(user.userName, roles.get(), done)" class="btn btn-primary">Toggle role</button>
+    </div>
+</ng-template>
+
 <app-overlaymenu [template]="template" #userMenu>
     <ng-template #template let-user>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -51,8 +58,7 @@
                 <span class="navbar-text" [cdkCopyToClipboard]="user.userName">
                     {{user.userName}}
                 </span>
-                <button class="btn nav-item btn-info btn-sm bg-light" routerLink="/user">Go to profile</button>
-                <button class="btn nav-item btn-info btn-sm bg-light" routerLink="/login">Logout</button>
+                <button class="btn nav-item btn-info btn-sm bg-light" (click)="editRoles(user)">Edit Roles</button>
             </ul>
         </nav>
     </ng-template>

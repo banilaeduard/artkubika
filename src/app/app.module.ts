@@ -10,7 +10,7 @@ import { HomeComponent } from './home/home.component';
 
 import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';
-import { CartListItemsComponent } from './cart-list-items/cart-list-items.component';
+// import { CartListItemsComponent } from './cart-list-items/cart-list-items.component';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { OverlayModule } from '@angular/cdk/overlay';
@@ -29,7 +29,7 @@ import { BaseCartItem, ShoppingCartModule } from 'ng-shopping-cart';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { ClipboardModule } from '@angular/cdk/clipboard';
-import { NgbCarouselConfig, NgbCarouselModule, NgbDatepickerModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCarouselConfig, NgbCarouselModule, NgbDatepickerModule, NgbDropdownModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ResetPasswordComponent } from './core/reset-password/reset-password.component';
 import { LoadingComponent } from './core/loading/loading.component';
 import { LoadingInterceptor } from './core/http/LoadingInterceptor';
@@ -45,7 +45,7 @@ import { UserEditComponent } from './user-edit/user-edit.component';
     AppHeaderComponent,
     AppFooterComponent,
     HomeComponent,
-    CartListItemsComponent,
+    //CartListItemsComponent,
     UserProfileComponent,
     LoginComponent,
     ConfirmationEmailComponent,
@@ -65,20 +65,21 @@ import { UserEditComponent } from './user-edit/user-edit.component';
     FormsModule,
     ReactiveFormsModule,
     //SocialLoginModule,
-    ShoppingCartModule.forRoot({ // <-- Add the cart module to your root module
-      itemType: BaseCartItem, // <-- Configuration is optional
-      serviceType: 'localStorage',
-      serviceOptions: {
-        storageKey: 'NgShoppingCart',
-        clearOnError: true
-      }
-    }),
+    // ShoppingCartModule.forRoot({ // <-- Add the cart module to your root module
+    //   itemType: BaseCartItem, // <-- Configuration is optional
+    //   serviceType: 'localStorage',
+    //   serviceOptions: {
+    //     storageKey: 'NgShoppingCart',
+    //     clearOnError: true
+    //   }
+    // }),
     BrowserAnimationsModule, // required animations module
     ToastrModule.forRoot(),
     ClipboardModule,
     NgbModule,
     NgbCarouselModule,
     NgbDatepickerModule,
+    NgbDropdownModule,
     CommonProjectModule,
     PortalModule
   ],

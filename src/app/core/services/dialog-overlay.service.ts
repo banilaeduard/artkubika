@@ -27,7 +27,7 @@ export class DialogOverlayService {
   }
 
   open<T>(templateRef: TemplateRef<T>,
-    context: { model: T, data: any } | null,
+    context: { model?: T, data?: any } | undefined,
     overlayConfig: OverlayConfig | undefined): DialogOverlayRef {
     const overlayRef = this.createOverlay(overlayConfig);
     const dialogRef = new DialogOverlayRef(overlayRef);
@@ -54,7 +54,7 @@ export class DialogOverlayService {
   private attachDialogContainer<T>(
     overlayRef: OverlayRef,
     templateRef: TemplateRef<T>,
-    context: { model: T, data: any } | null,
+    context: { model?: T, data?: any } | undefined,
     dialogOverlayRef: DialogOverlayRef): DialogOverlayComponent<T> {
     const containerPortal = new ComponentPortal<DialogOverlayComponent<T>>(DialogOverlayComponent, null, Injector.create({
       providers: [

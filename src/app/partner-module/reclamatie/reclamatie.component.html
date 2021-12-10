@@ -1,0 +1,16 @@
+<ng-scrollbar #scrollable id="content" [track]="'all'">
+    <label>Selectati un colet cu probleme</label>
+    <app-dropdown class="item" [title]="selectedItem?.display || 'Selectie colete'" [items]="items"
+        (itemClicked)="selectItem($event)">
+    </app-dropdown>
+    <textarea maxlength="500" class="item" placeholder="Description" type="textarea"
+        [(ngModel)]="description"></textarea>
+    <input id="file" multiple type="file" class="form-control" (change)="onFileChange($event)">
+    <div *ngIf="imagesSrc?.length">
+        <div *ngFor="let imageSrc of imagesSrc; index as i">
+            <img [src]="imageSrc.data" style="max-height: 250px; max-width:250px" />
+            <fa-icon (click)="delete(i)" icon="times" [styles]="{ stroke: 'black', color: 'black' }" size="2x">
+            </fa-icon>
+        </div>
+    </div>
+</ng-scrollbar>
