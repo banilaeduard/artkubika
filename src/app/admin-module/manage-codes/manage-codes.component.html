@@ -2,8 +2,10 @@
     <thead>
         <tr>
             <th scope="col">#</th>
-            <th scope="col">Display</th>
-            <th scope="col">Value</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+            <th scope="col"></th>
             <th scope="col">
                 <fa-icon (click)="addCode()" class="nav-item" icon="plus-square"
                     [styles]="{ stroke: 'black', color: 'black' }" size="2x">
@@ -12,24 +14,39 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let code of codes; index as i">
-            <th scope="row">{{i + 1}}</th>
-            <td>
-                <input type="text" (input)="code.dirty = true" [(ngModel)]="code.display" class="form-control" />
-            </td>
-            <td><input type="text" (input)="code.dirty = true" [(ngModel)]="code.value" class="form-control" /></td>
-            <td>
-                <fa-icon (click)="remove(i)" icon="times" [styles]="{ stroke: 'black', color: 'black' }" size="2x">
+        <ng-container *ngTemplateOutlet="treeView; context:{ data: codes, root: undefined, distance: 1 } ">
+        </ng-container>
+    </tbody>
+</table>
+
+<ng-template #treeView let-data="data" let-root="root" let-parent="parent" let-distance="distance">
+    <div *ngFor="let code of data; index as i">
+        <tr>
+            <td class="column-verticallineMiddle form-inline" style="vertical-align:middle;display:inline-flex;">
+                <input placeholder="Display" type="text" [(ngModel)]="code.codeDisplay" class="form-control" />
+                <input placeholder="Value" type="text" [(ngModel)]="code.codeValue" class="form-control" />
+                <input placeholder="ValueFormat" type="text" [(ngModel)]="code.codeValueFormat" class="form-control" />
+                <app-dropdown class="item" [title]="code.attributeTags || 'Selectie atribute'" [items]="attributes"
+                    (itemClicked)="selectItem(code, $event)">
+                </app-dropdown>
+                <fa-icon (click)="remove(parent, code, root)" icon="times"
+                    [styles]="{ stroke: 'black', color: 'black' }" size="2x">
                 </fa-icon>
-            </td>
-            <td>
-                <fa-icon *ngIf="!code.display || !code.value || !code.dirty" icon="check"
+                <fa-icon *ngIf="!root" (click)="save(code)" icon="check" [styles]="{ stroke: 'black', color: 'green' }"
+                    size="2x">
+                </fa-icon>
+                <fa-icon (click)="addChild(code)" icon="plus" [styles]="{ stroke: 'gray', color: 'black' }" size="2x">
+                </fa-icon>
+
+                <fa-icon *ngIf="code.children?.length > 0" (click)="code.expanded = !code.expanded" icon="plus"
                     [styles]="{ stroke: 'black', color: 'gray' }" size="2x">
-                </fa-icon>
-                <fa-icon *ngIf="!!code.display && !!code.value && !!code.dirty" (click)="save(i)" icon="check"
-                    [styles]="{ stroke: 'black', color: 'green' }" size="2x">
                 </fa-icon>
             </td>
         </tr>
-    </tbody>
-</table>
+        <div [style.padding-left.px]="distance * 20" *ngIf="code.expanded">
+            <ng-container
+                *ngTemplateOutlet="treeView;context:{ data: code.children, parent: code, root: root ?? code, distance: distance + 1}">
+            </ng-container>
+        </div>
+    </div>
+</ng-template>

@@ -45,7 +45,6 @@ import { UserEditComponent } from './user-edit/user-edit.component';
     AppHeaderComponent,
     AppFooterComponent,
     HomeComponent,
-    //CartListItemsComponent,
     UserProfileComponent,
     LoginComponent,
     ConfirmationEmailComponent,
@@ -64,15 +63,6 @@ import { UserEditComponent } from './user-edit/user-edit.component';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    //SocialLoginModule,
-    // ShoppingCartModule.forRoot({ // <-- Add the cart module to your root module
-    //   itemType: BaseCartItem, // <-- Configuration is optional
-    //   serviceType: 'localStorage',
-    //   serviceOptions: {
-    //     storageKey: 'NgShoppingCart',
-    //     clearOnError: true
-    //   }
-    // }),
     BrowserAnimationsModule, // required animations module
     ToastrModule.forRoot(),
     ClipboardModule,

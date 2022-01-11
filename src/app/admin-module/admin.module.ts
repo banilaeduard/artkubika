@@ -9,6 +9,8 @@ import { UsersDetailsComponent } from './users-details/users-details.component';
 import { EditRolesComponent } from './edit-roles/edit-roles.component';
 import { ManageCodesComponent } from './manage-codes/manage-codes.component';
 import { FormsModule } from '@angular/forms';
+import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+import { ManageAttributesComponent } from './manage-attributes/manage-attributes.component';
 
 const routes: Routes = [
     {
@@ -18,6 +20,10 @@ const routes: Routes = [
     {
         path: 'managecodes',
         component: ManageCodesComponent
+    },
+    {
+        path: 'manageattributes',
+        component: ManageAttributesComponent
     }
 ];
 
@@ -28,10 +34,11 @@ const routes: Routes = [
         CommonProjectModule,
         ClipboardModule,
         FormsModule,
+        NgbPaginationModule,
         RouterModule.forChild(routes)
     ],
     exports: [RouterModule],
-    declarations: [UsersDetailsComponent, EditRolesComponent, ManageCodesComponent]
+    declarations: [UsersDetailsComponent, EditRolesComponent, ManageCodesComponent, ManageAttributesComponent]
 })
 export class AdminModule {
 }

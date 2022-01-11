@@ -30,8 +30,8 @@ export class ReclamatieComponent implements OnInit, OnChanges {
 
   selectItem(id: string) {
     const code = this.items.find(item => item.id === id)!
-    this.item.code = { ...code, id: '0' };
-    this.item.codeValue = code.value;
+    this.item.code = { ...code, id: '0', children: undefined };
+    this.item.codeValue = code.codeValue;
   }
 
   delete(index: number) {

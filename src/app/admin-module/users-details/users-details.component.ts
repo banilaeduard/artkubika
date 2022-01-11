@@ -1,6 +1,7 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { tap } from 'rxjs/operators';
 import { DialogOverlayService } from 'src/app/core/services/dialog-overlay.service';
+import { PaginingModel } from 'src/app/models/PaginingModel';
 import { UserModel } from 'src/app/models/UserModel';
 import { UsersDetailsService } from './users-details.service';
 
@@ -14,9 +15,19 @@ export class UsersDetailsComponent implements OnInit {
     public users: UserModel[] = [];
     @ViewChild('createUser') createUserTemplate!: TemplateRef<UserModel>;
     @ViewChild('editRolesTemplate') editRolesTemplate!: TemplateRef<UserModel>;
+    public paging: PaginingModel;
 
     constructor(private userDetailsService: UsersDetailsService,
         private dialogOverlayService: DialogOverlayService) {
+        this.paging = PaginingModel.getNew();
+    }
+
+    public get page() {
+        return this.paging.page;
+    }
+
+    public set page(page: number) {
+        this.paging.page = page;
     }
 
     ngOnInit(): void {
@@ -78,8 +89,8 @@ export class UsersDetailsComponent implements OnInit {
     }
 
     private syncUsers = () => {
-        this.userDetailsService.getUsers(1, 20).pipe(
-            tap(console.log)
+        this.userDetailsService.getUsers(this.paging.page, this.paging.pageSize).pipe(
+            tap(model => this.paging.collectionSize = model.count)
         ).subscribe(model => this.users = model.users);
     }
 }

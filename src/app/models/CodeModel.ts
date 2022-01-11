@@ -1,8 +1,13 @@
 export interface CodeModel {
     id: string;
-    display: string;
-    value: string;
+    codeDisplay: string;
+    codeValue: string;
     code: string;
+    children: CodeModel[] | undefined;
+    attributeTags: string;
+    codeValueFormat: string;
+    args: string;
+    isRoot: boolean;
 
-    dirty: boolean;
+    expanded: boolean;
 }

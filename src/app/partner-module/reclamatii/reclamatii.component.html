@@ -3,26 +3,31 @@
         <tr>
             <th scope="col" style="width: 10%;"># Reclamatii</th>
             <th scope="col" style="width: 70%;">
+                <ngb-pagination [maxSize]="'10'" [(page)]="page" [pageSize]="paging.pageSize"
+                    [collectionSize]="paging.collectionSize" [rotate]="true">
+                </ngb-pagination>
             </th>
-            <th style="width: 15%;">Adauga o reclamatie
-                <fa-icon (click)="addComplaint()" class="nav-item" icon="plus-square"
-                    [styles]="{ stroke: 'black', color: 'black' }" size="2x">
+            <th (click)="addComplaint()" style="width: 15%;cursor: pointer;">Adauga o reclamatie
+                <fa-icon class="nav-item" icon="plus-square" [styles]="{ stroke: 'black', color: 'black' }" size="2x">
                 </fa-icon>
+            </th>
+            <th>
+                DataKey
             </th>
         </tr>
     </thead>
     <tbody>
         <tr *ngFor="let item of complaints; index as i">
             <td style="width: 10%;" scope="row">{{i + 1}}</td>
-            <td>
+            <td style="width: 70%;">
                 <table class="table table-sm">
                     <thead>
                         <tr>
                             <th scope="col" style="width: 15%;"># Componente</th>
                             <th scope="col" style="width: 25%;">Name</th>
                             <th scope="col" style="width: 55%;">Description</th>
-                            <th scope="col" style="width: 15%;">Adauga
-                                <fa-icon (click)="addTicket(item)" class="nav-item" icon="plus-square"
+                            <th scope="col" (click)="addTicket(item)" style="width: 15%;cursor: pointer;">Adauga
+                                <fa-icon class="nav-item" icon="plus-square"
                                     [styles]="{ stroke: 'gray', color: 'gray' }">
                                 </fa-icon>
                             </th>
@@ -35,16 +40,24 @@
                                 {{ticket.code?.display}}
                             </td>
                             <td style="width: 55%;">{{ticket.description}}</td>
-                            <td *ngIf='ticket.images?.length > 0' style="width: 15%;">
-                                <fa-icon (click)="editTicket(item, ticket)" class="nav-item" icon="paperclip"
-                                    [styles]="{ stroke: 'gray', color: 'gray' }">
+                            <td *ngIf='ticket.hasImages' (click)="editTicket(item, ticket)"
+                                style="width: 15%;cursor: pointer;">
+                                <fa-icon class="nav-item" icon="paperclip" [styles]="{ stroke: 'gray', color: 'gray' }">
                                 </fa-icon>
                                 Imagini atasate
                             </td>
-                            <td *ngIf='ticket.images?.length == 0' style="width: 15%;"></td>
+                            <td *ngIf='!ticket.hasImages' (click)="editTicket(item, ticket)"
+                                style="width: 15%;cursor: pointer;">
+                                <fa-icon class="nav-item" icon="edit" [styles]="{ stroke: 'gray', color: 'gray' }">
+                                </fa-icon>
+                                Edit
+                            </td>
                         </tr>
                     </tbody>
                 </table>
+            </td>
+            <td style="width: 15%;">
+                {{item?.dataKey}}
             </td>
         </tr>
     </tbody>

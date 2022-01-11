@@ -7,4 +7,5 @@ export interface Ticket {
     description: string;
     id: string;
     images: Images[];
+    hasImages: boolean;
 }
