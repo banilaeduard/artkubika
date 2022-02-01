@@ -18,13 +18,22 @@ export class ManageCodesComponent implements OnInit {
 
   ngOnInit(): void {
     this.manageCodesService.getCodes().subscribe(codes => this.codes = codes.filter(t => t.isRoot));
-    this.manageAttributesService.getCodes().subscribe(attributes =>
-      this.attributes = attributes.map(t => {
-        return {
-          display: `${t.tag} - ${t.innerValue}`, id: { tag: t.tag, value: t.innerValue }
+    const map: Map<string, string> = new Map();
+    this.manageAttributesService.getCodes().subscribe(attributes => {
+      attributes.forEach(t => {
+        if (map.has(t.tag)) {
+          map.set(t.tag, map.get(t.tag) + `, ${t.innerValue}`);
+        } else {
+          map.set(t.tag, `${t.innerValue}`);
         }
-      })
-    );
+      });
+      this.attributes = [];
+      map.forEach((value: string, key: string) => {
+        this.attributes.push(
+          { display: `${key} (${value})`, id: { tag: key, value: value } }
+        );
+      });
+    })
   }
 
   addCode() {
@@ -59,7 +68,21 @@ export class ManageCodesComponent implements OnInit {
   }
 
   selectItem(node: CodeModel, event: any) {
-    node.attributeTags = event.tag;
+    if (!node.attributeTags?.includes(event.tag)) {
+      node.attributeTags = !!node.attributeTags ?
+        `${node.attributeTags}, ${event.tag}` :
+        event.tag
+    } else {
+      node.attributeTags = node.attributeTags
+        .replace(event.tag, '').split(',')
+        .filter(value => value?.trim()?.length > 0)
+        .map(value => value.trim())
+        .reduce((accumulator, currentValue) => {
+          if (!accumulator) accumulator = currentValue;
+          else accumulator = accumulator + ', ' + currentValue;
+          return accumulator;
+        }, '');
+    }
   }
 
   addChild(parentNode: CodeModel) {

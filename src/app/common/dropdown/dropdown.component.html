@@ -6,8 +6,8 @@
                 (keyup)="filterItems()">
         </div>
         <ng-scrollbar #scrollable id="content" [track]="'all'">
-            <a class="dropdown-item" (click)="clicked(item.id)" *ngFor="let item of filterItems()">
-                {{item.display}}
+            <a class="dropdown-item" (click)="clicked(item)" *ngFor="let item of filterItems()">
+                {{mapToDisplay(item).display}}
             </a>
         </ng-scrollbar>
     </div>

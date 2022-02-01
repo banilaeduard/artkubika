@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { CodeModel } from 'src/app/models/CodeModel';
 import { Ticket } from 'src/app/models/Ticket';
 import { CodesService } from '../codes.service';
@@ -9,12 +9,15 @@ import { CodesService } from '../codes.service';
   styleUrls: ['./reclamatie.component.less']
 })
 export class ReclamatieComponent implements OnInit, OnChanges {
-  items!: CodeModel[];
+  rootCodes: CodeModel[];
+  codeStack: CodeModel[];
   @Input() item: Ticket;
 
   selectedItem: CodeModel | undefined;
   constructor(private codesService: CodesService) {
     this.item = {} as Ticket;
+    this.rootCodes = [];
+    this.codeStack = [];
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -25,13 +28,17 @@ export class ReclamatieComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    this.codesService.getCodes().subscribe(codes => this.items = codes);
+    this.codesService.getCodes().subscribe(codes =>
+      codes.forEach(item => item.isRoot ? this.rootCodes.push(item) : "")
+    );
   }
 
-  selectItem(id: string) {
-    const code = this.items.find(item => item.id === id)!
-    this.item.code = { ...code, id: '0', children: undefined };
+  selectItem(code: CodeModel, distance: number) {
+    this.item.code = { ...code, id: '0', children: undefined } as CodeModel;
     this.item.codeValue = code.codeValue;
+
+    code.expanded = true;
+    this.codeStack.splice(distance, this.codeStack.length - distance, code);
   }
 
   delete(index: number) {
@@ -53,5 +60,9 @@ export class ReclamatieComponent implements OnInit, OnChanges {
   get(): Ticket {
     this.item.id = this.item.id ?? '0';
     return this.item;
+  }
+
+  public mapToDisplay(item: CodeModel): { display: string, id: CodeModel } {
+    return { display: item.codeDisplay!, id: item };
   }
 }

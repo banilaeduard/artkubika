@@ -1,8 +1,9 @@
 <ng-scrollbar #scrollable id="content" [track]="'all'">
     <label>Selectati un colet cu probleme</label>
-    <app-dropdown class="item" [title]="item?.code?.display || 'Selectie colete'" [items]="items"
-        (itemClicked)="selectItem($event)">
-    </app-dropdown>
+
+    <ng-container *ngTemplateOutlet="treeView; context:{ data: rootCodes, distance: 0} ">
+    </ng-container>
+
     <textarea maxlength="500" class="item" placeholder="Description" type="textarea"
         [(ngModel)]="item.description"></textarea>
     <input id="file" multiple type="file" class="form-control" (change)="onFileChange($event)">
@@ -14,3 +15,14 @@
         </div>
     </div>
 </ng-scrollbar>
+
+<ng-template #treeView let-data="data" let-distance="distance">
+    <app-dropdown *ngIf="data" class="item" [items]="data"
+        [title]="codeStack[distance]?.expanded ? codeStack[distance].codeDisplay : 'Selectati itemul'"
+        [mapToDisplay]="mapToDisplay" (itemClicked)="selectItem($event, distance)">
+    </app-dropdown>
+    <div *ngIf="codeStack[distance]?.expanded">
+        <ng-container *ngTemplateOutlet="treeView;context:{data: codeStack[distance].children, distance: distance + 1}">
+        </ng-container>
+    </div>
+</ng-template>

@@ -24,7 +24,6 @@ const routes: Routes = [
     ClipboardModule,
     FormsModule,
     ReactiveFormsModule,
-    CommonProjectModule,
     NgScrollbarModule,
     NgbPaginationModule,
     RouterModule.forChild(routes)
