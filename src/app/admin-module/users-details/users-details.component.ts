@@ -39,7 +39,7 @@ export class UsersDetailsComponent implements OnInit {
     }
 
     public editRoles = (user: UserModel): void => {
-        this.userDetailsService.getUserRoles(user.userName).pipe(tap(console.log)).subscribe(roles =>
+        this.userDetailsService.getUserRoles(user.userName).subscribe(roles =>
             this.dialogOverlayService.open(this.editRolesTemplate,
                 {
                     model: user,

@@ -33,7 +33,6 @@ export class UsersDetailsService {
     }
 
     public addUserToRole(userName: string, role: string): Observable<any> {
-        console.log({ userName, role });
         return this.httpClient.post(`usermanager/add-to-role/${userName}?role=${role}`, {});
     }
 

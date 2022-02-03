@@ -38,6 +38,8 @@ import { CommonProjectModule } from './common/common-project.module';
 import { PortalModule } from '@angular/cdk/portal';
 import { UserRegistrationComponent } from './user-registration/user-registration.component';
 import { UserEditComponent } from './user-edit/user-edit.component';
+import { AdminModule } from './admin-module/admin.module';
+import { PartnerModule } from './partner-module/partner.module';
 
 @NgModule({
   declarations: [
@@ -71,7 +73,11 @@ import { UserEditComponent } from './user-edit/user-edit.component';
     NgbDatepickerModule,
     NgbDropdownModule,
     CommonProjectModule,
-    PortalModule
+    PortalModule,
+
+    // user defined modules
+    AdminModule,
+    PartnerModule
   ],
   providers: [
     { provide: "BASE_API_URL", useValue: environment.baseUrl },

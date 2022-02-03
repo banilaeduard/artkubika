@@ -82,6 +82,6 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   resetPassword(event: any) {
-    this.userManagerService.generatePasswordResetToken(this.f['username'].value).subscribe(console.log);
+    this.userManagerService.generatePasswordResetToken(this.f['username'].value).subscribe();
   }
 }

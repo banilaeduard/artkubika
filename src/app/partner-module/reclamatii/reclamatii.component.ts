@@ -32,6 +32,7 @@ export class ReclamatiiComponent implements OnInit, OnDestroy {
 
     this.paging = PaginingModel.getNew();
   }
+
   ngOnDestroy(): void {
     this.sub && this.sub.unsubscribe();
   }
@@ -40,35 +41,26 @@ export class ReclamatiiComponent implements OnInit, OnDestroy {
     this.syncTickets();
   }
 
+  addComplaint() {
+    this.complaints.unshift({ id: '0', tickets: [] } as ComplaintModel);
+  }
+
   addTicket(complaint: ComplaintModel) {
     this._next.next({ model: complaint, data: { header: 'Reclamatie componenta' } });
   }
 
   editTicket(complaint: ComplaintModel, ticket: Ticket) {
     if (ticket.hasImages && !ticket.images?.length) {
-      this.complaintService.fetchImages(complaint).pipe(
-        tap(comp => complaint.tickets = comp.tickets),
-        map(_ => complaint.tickets.find(it => it.id === ticket.id))
-      ).subscribe(ticket =>
-        this._next.next({ model: complaint, data: { header: 'Reclamatie componenta', ticket } }));
+      this.complaintService.fetchImages(ticket)
+        .subscribe(ticket =>
+          this._next.next({ model: complaint, data: { header: 'Reclamatie componenta', ticket } }));
     } else
       this._next.next({ model: complaint, data: { header: 'Reclamatie componenta', ticket } });
   }
 
-  addComplaint() {
-    this.complaints.unshift({ id: '0', tickets: [] } as ComplaintModel);
-  }
-
   save(ticket: Ticket, complaint: ComplaintModel, done: () => boolean) {
-    if (!parseInt(ticket.id)) {
-      complaint.tickets.push(ticket)
-    }
     this.complaintService.save({ ...complaint, tickets: [ticket] }).pipe(
-      tap(item => {
-        complaint.id = item.id;
-        ticket.id = complaint.tickets[0].id;
-        Object.assign(complaint.tickets.find(it => it.id === complaint.tickets[0].id), { ...complaint.tickets[0] });
-      })
+      tap(item => Object.assign(complaint, item))
     ).subscribe(done);
   }
 

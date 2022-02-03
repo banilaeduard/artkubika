@@ -4,9 +4,7 @@
 
 export const environment = {
   production: false,
-  //baseUrl: "https://20.113.10.49/api",
-  baseUrl: "https://localhost:5001"
-  // baseUrl: "https://test-5ccby4rifa-ew.a.run.app"
+  baseUrl: "api"
 };
 
 /*

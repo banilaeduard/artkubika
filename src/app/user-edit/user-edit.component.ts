@@ -20,7 +20,6 @@ export class UserEditComponent implements OnDestroy {
     private userContextService: UserContextService,
     private toastr: ToastrService) {
     this.sub = this.userContextService.CurrentUser$.subscribe(_user => {
-      console.log(_user);
       this.userModel = _user;
     });
   }
@@ -51,7 +50,6 @@ export class UserEditComponent implements OnDestroy {
         user.address
       );
     } else {
-      console.log($event);
       this.toastr.error($event.errors);
     }
   }

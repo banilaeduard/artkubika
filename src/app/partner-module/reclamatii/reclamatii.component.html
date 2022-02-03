@@ -37,7 +37,7 @@
                         <tr *ngFor="let ticket of item.tickets; index as i">
                             <td style="width: 15%;" scope="row">{{i + 1}}</td>
                             <td style="width: 25%;">
-                                {{ticket.code?.display}}
+                                {{ticket.codeValue}}
                             </td>
                             <td style="width: 55%;">{{ticket.description}}</td>
                             <td *ngIf='ticket.hasImages' (click)="editTicket(item, ticket)"
@@ -56,9 +56,11 @@
                     </tbody>
                 </table>
             </td>
+
             <td style="width: 15%;">
                 {{item?.dataKey}}
             </td>
+
         </tr>
     </tbody>
 </table>
@@ -67,6 +69,6 @@
     <app-reclamatie [item]="data.ticket" #rec>
     </app-reclamatie>
     <div class="form-group">
-        <button (click)="save(rec.get(), complaint,done)" class="btn btn-primary">Salveaza</button>
+        <button (click)="save(rec.get(), complaint, done)" class="btn btn-primary">Salveaza</button>
     </div>
 </ng-template>
