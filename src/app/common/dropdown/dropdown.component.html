@@ -1,14 +1,27 @@
-<div ngbDropdown [autoClose]="true">
-    <button style="min-width: 15vw;" ngbDropdownToggle class="btn nav-item btn-info btn-sm bg-light">{{title}}</button>
-    <div ngbDropdownMenu>
-        <div class="md-form">
-            <input placeholder="Search" type="search" class="form-control" id="input1" [(ngModel)]="searchValue"
-                (keyup)="filterItems()">
+<div class="btn-group" dropdown>
+    <button id="button-basic" dropdownToggle type="button" class="title btn btn-outline-secondary dropdown-toggle"
+        aria-controls="dropdown-basic">
+        {{title}} <span class="caret"></span>
+    </button>
+    <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
+        <div *ngIf="items?.length > 4" class="md-form">
+            <input placeholder="Search" (click)="$event.stopPropagation();searchValue = ''; filterItems();"
+                type="search" class="form-control" id="input1" [(ngModel)]="searchValue" (keyup)="filterItems()">
         </div>
         <ng-scrollbar #scrollable id="content" [track]="'all'">
-            <a class="dropdown-item" (click)="clicked(item)" *ngFor="let item of filterItems()">
-                {{mapToDisplay(item).display}}
-            </a>
+            <div *ngFor="let item of filteredItems; index as i">
+                <h5
+                    *ngIf="item.visible && (!filteredItems[i-1] || item.displayItem.groupBy !== filteredItems[i-1]?.displayItem.groupBy)">
+                    {{item?.displayItem?.groupBy}}
+                    <li class="divider dropdown-divider"></li>
+                </h5>
+
+                <li *ngIf="item.visible" role="menuitem"> <a
+                        [ngClass]="{'selected' : item.displayItem.selected, 'dropdown-item': true}"
+                        (click)="clicked(item)">
+                        {{item.displayItem.display}}
+                    </a></li>
+            </div>
         </ng-scrollbar>
-    </div>
+    </ul>
 </div>

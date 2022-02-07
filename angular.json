@@ -30,16 +30,10 @@
               "src/assets"
             ],
             "styles": [
-              "node_modules/ng-shopping-cart/styles/css/ng-shopping-cart.css",
-              "node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "node_modules/ngx-toastr/toastr.css",
               "src/styles.less",
               "variables.less"
             ],
-            "scripts": [
-              "node_modules/jquery/dist/jquery.min.js",
-              "node_modules/bootstrap/dist/js/bootstrap.min.js"
-            ]
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -104,16 +98,10 @@
               "src/assets"
             ],
             "styles": [
-              "node_modules/ng-shopping-cart/styles/css/ng-shopping-cart.css",
-              "node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "node_modules/ngx-toastr/toastr.css",
               "src/styles.less",
               "variables.less"
             ],
-            "scripts": [
-              "node_modules/jquery/dist/jquery.min.js",
-              "node_modules/bootstrap/dist/js/bootstrap.min.js"
-            ]
+            "scripts": []
           }
         }
       }

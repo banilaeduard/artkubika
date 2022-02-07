@@ -2,7 +2,7 @@ import { CodeModel } from "./CodeModel";
 import { Images } from "./Images";
 
 export interface Ticket {
-    code: CodeModel;
+    codeLinks: CodeModel[];
     codeValue: string;
     description: string;
     id: string;

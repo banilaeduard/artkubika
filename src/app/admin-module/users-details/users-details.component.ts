@@ -28,6 +28,7 @@ export class UsersDetailsComponent implements OnInit {
 
     public set page(page: number) {
         this.paging.page = page;
+        this.syncUsers();
     }
 
     ngOnInit(): void {

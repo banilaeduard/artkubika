@@ -1,7 +1,7 @@
 <fa-icon icon="user" [styles]="{ stroke: 'black', color: 'black' }" size="2x" [spin]="false"
   (click)="userMenu.openFromTarget($event.target)">
 </fa-icon>
-<app-overlaymenu [template]="template" [overridePosition]="pos" #userMenu>
+<app-overlaymenu [template]="template" #userMenu>
   <ng-template #template>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <ul class="user-menu navbar-nav mr-auto">

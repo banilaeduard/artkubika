@@ -1,15 +1,11 @@
 export class PaginingModel {
-    constructor() {
-        this.pageSize = 7;
-        this.page = 1;
-        this.collectionSize = 0;
+    private constructor(pageSize: number, page: number, collectionSize: number) {
+        this.pageSize = pageSize;
+        this.page = page;
+        this.collectionSize = collectionSize;
     }
     static getNew(pageSize?: number, page?: number, collectionSize?: number): PaginingModel {
-        return {
-            page: page ?? 1,
-            pageSize: pageSize ?? 7,
-            collectionSize: collectionSize ?? 0
-        } as PaginingModel;
+        return new PaginingModel(pageSize ?? 9, page ?? 1, collectionSize ?? 0);
     }
 
     public page: number;

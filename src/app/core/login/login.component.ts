@@ -3,7 +3,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 import { AuthentificationService } from 'src/app/core/services/authentification.service';
-import { GoogleLoginProvider, SocialAuthService } from 'angularx-social-login';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { UserManagerService } from '../services/user.manager.service';
@@ -54,10 +53,6 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   // convenience getter for easy access to form fields
   get f() { return this.loginForm.controls; }
-
-  // signInWithGoogle(): void {
-  //   this.socialLogin.signIn(GoogleLoginProvider.PROVIDER_ID).then(console.log);
-  // }
 
   onSubmit() {
     this.submitted = true;

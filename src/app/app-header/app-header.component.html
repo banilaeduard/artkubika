@@ -1,35 +1,49 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-info">
-    <a class="navbar-brand" routerLink="/">
-        <img style="height:56px;" src="\assets\art-kubika-logo.png" routerLink='/' />
-    </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbarNavAltMarkup"
-        aria-controls="navbarNavAltMarkup" aria-expanded="true" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse navbarNavAltMarkup">
-        <div class="navbar-nav">
-            <a class="nav-item nav-link active" routerLink="/">Home <span class="sr-only">(current)</span></a>
-        </div>
-        <div class="navbar-nav">
-            <a class="nav-item nav-link active" *ngIf="isAdmin || isPartner" routerLink="/partner">Reclamatii<span
-                    class="sr-only">(current)</span></a>
-        </div>
-        <div class="navbar-nav">
-            <a class="nav-item nav-link active" *ngIf="isAdmin" routerLink="/admin/managecodes">Manage codes<span
-                    class="sr-only">(current)</span></a>
-        </div>
-        <div class="navbar-nav">
-            <a class="nav-item nav-link active" *ngIf="isAdmin" routerLink="/admin/manageattributes">Manage
-                attributes<span class="sr-only">(current)</span></a>
-        </div>
-    </div>
-    <div class="navbar-nav navbar-right navbarNavAltMarkup">
-        <app-user-profile class="nav-item" *ngIf='(loggedIn | async)?.loggedIn!'></app-user-profile>
-        <fa-icon class="nav-item" icon="sign-in-alt" *ngIf='!(loggedIn | async)?.loggedIn!'
-            [styles]="{ stroke: 'black', color: 'black' }" size="2x" routerLink='/login'>
-        </fa-icon>
-        <fa-icon *ngIf="isAdmin" class="nav-item" icon="user-cog" [styles]="{ stroke: 'black', color: 'black' }"
-            size="2x" routerLink='/admin'>
-        </fa-icon>
+<nav ngxNavbarDynamicExpand class="navbar navbar-expand-lg navbar-light bg-info">
+    <div class="container-fluid">
+        <a class="navbar-brand" routerLink="/">
+            <img style="height:56px;" src="\assets\art-kubika-logo.png" routerLink='/' />
+        </a>
+        <button class="navbar-toggler" type="button" (click)="collapse.toggle()" aria-controls="main-nav"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="
+                  navbar-toggler-icon
+                  d-flex
+                  align-items-center
+                  justify-content-center
+                ">
+            </span>
+        </button>
+        <ngx-navbar-collapse id="main-nav" #collapse="ngxNavbarCollapse">
+            <ul class="navbar-nav mr-auto mb-2 mb-lg-0">
+                <li class="nav-item active">
+                    <a class="nav-link active" routerLink="/">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item" *ngIf="isAdmin || isPartner">
+                    <a class="nav-link active" routerLink="/partner">Reclamatii<span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item" *ngIf="isAdmin">
+                    <a class="nav-link active" routerLink="/admin/managecodes">Manage
+                        codes<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item" *ngIf="isAdmin">
+                    <a class="nav-link active" routerLink="/admin/manageattributes">Manage
+                        attributes<span class="sr-only">(current)</span></a>
+                </li>
+            </ul>
+        </ngx-navbar-collapse>
+        <ul class="navbar-nav justify-content-end flex-row">
+            <li class="nav-item">
+                <app-user-profile class="nav-item" *ngIf='(loggedIn | async)?.loggedIn!'></app-user-profile>
+                <fa-icon class="nav-item" icon="sign-in-alt" *ngIf='!(loggedIn | async)?.loggedIn!'
+                    [styles]="{ stroke: 'black', color: 'black' }" size="2x" routerLink='/login'>
+                </fa-icon>
+            </li>
+            <li class="nav-item" *ngIf="isAdmin">
+                <fa-icon *ngIf="isAdmin" class="nav-item" icon="user-cog" [styles]="{ stroke: 'black', color: 'black' }"
+                    size="2x" routerLink='/admin'>
+                </fa-icon>
+            </li>
+        </ul>
     </div>
 </nav>

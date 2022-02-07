@@ -11,7 +11,6 @@ import { HomeComponent } from './home/home.component';
 import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 // import { CartListItemsComponent } from './cart-list-items/cart-list-items.component';
-import { NgScrollbarModule } from 'ngx-scrollbar';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { environment } from 'src/environments/environment';
@@ -20,24 +19,26 @@ import { LoginComponent } from './core/login/login.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { JwtTokenInterceptor } from './core/http/JwtTokenInterceptor';
 import { ConfirmationEmailComponent } from './core/confirmation-email/confirmation-email.component';
-import { BaseCartItem, ShoppingCartModule } from 'ng-shopping-cart';
 // import { SocialLoginModule, SocialAuthServiceConfig } from 'angularx-social-login';
 // import {
 //   GoogleLoginProvider,
 //   FacebookLoginProvider
 // } from 'angularx-social-login';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ToastrModule } from 'ngx-toastr';
 import { ClipboardModule } from '@angular/cdk/clipboard';
-import { NgbCarouselConfig, NgbCarouselModule, NgbDatepickerModule, NgbDropdownModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ResetPasswordComponent } from './core/reset-password/reset-password.component';
 import { LoadingComponent } from './core/loading/loading.component';
 import { LoadingInterceptor } from './core/http/LoadingInterceptor';
 import { DialogOverlayComponent } from './core/dialog-overlay/dialog-overlay.component';
-import { CommonProjectModule } from './common/common-project.module';
 import { PortalModule } from '@angular/cdk/portal';
 import { UserRegistrationComponent } from './user-registration/user-registration.component';
 import { UserEditComponent } from './user-edit/user-edit.component';
+import { ToastrModule } from 'ngx-toastr';
+import { BsDropdownModule } from "ngx-bootstrap/dropdown";
+import { NgxNavbarModule } from 'ngx-bootstrap-navbar';
+import { NgScrollbarModule } from 'ngx-scrollbar';
+import { CommonProjectModule } from './common/common-project.module';
+import { NgxPaginationModule } from 'ngx-pagination';
 import { AdminModule } from './admin-module/admin.module';
 import { PartnerModule } from './partner-module/partner.module';
 
@@ -67,15 +68,13 @@ import { PartnerModule } from './partner-module/partner.module';
     ReactiveFormsModule,
     BrowserAnimationsModule, // required animations module
     ToastrModule.forRoot(),
+    BsDropdownModule.forRoot(),
+    NgxPaginationModule,
+    NgxNavbarModule,
     ClipboardModule,
-    NgbModule,
-    NgbCarouselModule,
-    NgbDatepickerModule,
-    NgbDropdownModule,
-    CommonProjectModule,
     PortalModule,
-
     // user defined modules
+    CommonProjectModule,
     AdminModule,
     PartnerModule
   ],
@@ -96,35 +95,42 @@ import { PartnerModule } from './partner-module/partner.module';
       useClass: LoadingInterceptor,
       multi: true,
     },
-    // {
-    //   provide: 'SocialAuthServiceConfig',
-    //   useValue: {
-    //     autoLogin: false,
-    //     providers: [
-    //       {
-    //         id: GoogleLoginProvider.PROVIDER_ID,
-    //         provider: new GoogleLoginProvider(
-    //           'clientId'
-    //         )
-    //       },
-    //       {
-    //         id: FacebookLoginProvider.PROVIDER_ID,
-    //         provider: new FacebookLoginProvider('clientId')
-    //       }
-    //     ]
-    //   } as SocialAuthServiceConfig
-    // },
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor(library: FaIconLibrary, config: NgbCarouselConfig) {
+  constructor(library: FaIconLibrary) {
     library.addIconPacks(fas);
-    config.interval = 0;
-    config.wrap = true;
-    config.keyboard = true;
-    config.pauseOnHover = false;
-    config.animation = false;
-    config.showNavigationIndicators = true;
+    String.prototype.hashCode = function () {
+      var hash = 0, i, chr;
+      if (this.length === 0) return hash;
+      for (i = 0; i < this.length; i++) {
+        chr = this.charCodeAt(i);
+        hash = ((hash << 5) - hash) + chr;
+        hash |= 0; // Convert to 32bit integer
+      }
+      return hash;
+    };
   }
 }
+declare global {
+  interface String {
+    hashCode(): number;
+  }
+}
+
+String.prototype.hashCode = () => {
+  var d = String(this);
+  var hash = 0, i, chr;
+  if (d.length === 0) return hash;
+  for (i = 0; i < d.length; i++) {
+    chr = d.charCodeAt(i);
+    hash = ((hash << 5) - hash) + chr;
+    hash |= 0; // Convert to 32bit integer
+  }
+  return hash;
+};
+
+console.log("".hashCode());
+
+export { }

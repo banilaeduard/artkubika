@@ -3,9 +3,13 @@
         <tr>
             <th scope="col" style="width: 10%;"># Reclamatii</th>
             <th scope="col" style="width: 70%;">
-                <ngb-pagination [maxSize]="'10'" [(page)]="page" [pageSize]="paging.pageSize"
-                    [collectionSize]="paging.collectionSize" [rotate]="true">
-                </ngb-pagination>
+                <div class="d-flex justify-content-center">
+                    <pagination-controls id="foo" (pageChange)="page = $event" (pageBoundsCorrection)="page = $event"
+                        maxSize="9" directionLinks="true" autoHide="true" responsive="true" previousLabel="Previous"
+                        currentLabel="page" nextLabel="Next" screenReaderPaginationLabel="Pagination"
+                        screenReaderPageLabel="page" screenReaderCurrentLabel="You're on page">
+                    </pagination-controls>
+                </div>
             </th>
             <th (click)="addComplaint()" style="width: 15%;cursor: pointer;">Adauga o reclamatie
                 <fa-icon class="nav-item" icon="plus-square" [styles]="{ stroke: 'black', color: 'black' }" size="2x">
@@ -17,8 +21,11 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let item of complaints; index as i">
-            <td style="width: 10%;" scope="row">{{i + 1}}</td>
+        <tr *ngFor="let item of complaints | paginate: { id: 'foo',
+                                                      itemsPerPage: paging.pageSize,
+                                                      currentPage: page,
+                                                      totalItems: paging.collectionSize }; index as i">
+            <td style=" width: 10%;" scope="row">{{i + 1}}</td>
             <td style="width: 70%;">
                 <table class="table table-sm">
                     <thead>

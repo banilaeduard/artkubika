@@ -8,7 +8,6 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./user-profile.component.less']
 })
 export class UserProfileComponent implements OnInit, OnDestroy {
-  public pos: { x?: number, y?: number } = { y: 56 };
   public user!: string;
   public sub!: Subscription;
 

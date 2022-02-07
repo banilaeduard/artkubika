@@ -39,7 +39,7 @@ export class ManageCodesComponent implements OnInit {
   addCode() {
     this.codes.unshift({
       isRoot: true,
-      expanded: false
+      selected: false
     } as CodeModel);
   }
 
@@ -88,6 +88,6 @@ export class ManageCodesComponent implements OnInit {
   addChild(parentNode: CodeModel) {
     if (!parentNode.children) parentNode.children = [];
     parentNode.children.push({} as CodeModel);
-    parentNode.expanded = true;
+    parentNode.selected = true;
   }
 }

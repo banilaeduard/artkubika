@@ -1,5 +1,6 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { CodeModel } from 'src/app/models/CodeModel';
+import { dropdown } from 'src/app/models/dropdown';
 import { Ticket } from 'src/app/models/Ticket';
 import { CodesService } from '../codes.service';
 
@@ -8,44 +9,45 @@ import { CodesService } from '../codes.service';
   templateUrl: './reclamatie.component.html',
   styleUrls: ['./reclamatie.component.less']
 })
-export class ReclamatieComponent implements OnInit, OnChanges {
-  rootCodes: CodeModel[];
-  codeStack: CodeModel[];
+export class ReclamatieComponent implements OnInit, OnChanges, OnDestroy {
+  codeStack: CodeModel[][];
+  codeStackDropdown: CodeModel[][];
+  map: Map<string, boolean> = new Map();
+  attributeStack!: []
   @Input() item: Ticket;
 
   selectedItem: CodeModel | undefined;
   constructor(private codesService: CodesService) {
     this.item = {} as Ticket;
-    this.rootCodes = [];
+    this.codeStackDropdown = [];
     this.codeStack = [];
   }
+  ngOnDestroy(): void {
+    this.codeStackDropdown[0] && this.codeStackDropdown[0].forEach(code =>
+      this.isSelected(code) && this.toggleSelected(code)
+    );
+  }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  public ngOnChanges(changes: SimpleChanges): void {
     if (changes.item) {
       this.item = changes.item.currentValue || {};
       if (!this.item.images) this.item.images = [];
     }
   }
 
-  ngOnInit(): void {
-    this.codesService.getCodes().subscribe(codes =>
-      codes.forEach(item => item.isRoot ? this.rootCodes.push(item) : "")
+  public ngOnInit(): void {
+    this.codeStackDropdown.push([]);
+    this.codesService.getCodes().subscribe(codes => {
+      codes.forEach(item => item.isRoot ? this.codeStackDropdown[0].push(item) : "");
+    }
     );
   }
 
-  selectItem(code: CodeModel, distance: number) {
-    this.item.code = { ...code, id: '0', children: undefined } as CodeModel;
-    this.item.codeValue = code.codeValue;
-
-    code.expanded = true;
-    this.codeStack.splice(distance, this.codeStack.length - distance, code);
-  }
-
-  delete(index: number) {
+  public delete(index: number) {
     this.item.images.splice(index, 1);
   }
 
-  onFileChange(event: any) {
+  public onFileChange(event: any) {
     if (event.target.files && event.target.files.length) {
       for (const file of event.target.files) {
         const reader = new FileReader();
@@ -57,12 +59,89 @@ export class ReclamatieComponent implements OnInit, OnChanges {
     }
   }
 
-  get(): Ticket {
+  public selectItem(code: CodeModel, distance: number) {
+    this.toggleSelected(code);
+    this.codeStack[distance] = this.codeStack[distance] || [];
+    this.codeStackDropdown[distance + 1] = this.codeStackDropdown[distance + 1] || [];
+
+    if (!this.isSelected(code))
+      this.processRecursive(
+        [code]
+        , code.parent
+        , (node, _, depth) => {
+          this.codeStackDropdown[depth + 1] = this.codeStackDropdown[depth + 1]?.filter(t => t.parent.id != node.id);
+          this.codeStack[depth] = this.codeStack[depth]?.filter(t => t.id != node.id);
+
+          return !!node.children;
+        }
+        , (node, _) => node.children || [], distance
+      );
+    else {
+      this.processRecursive(
+        [code]
+        , code
+        , (node, _, depth) => {
+          this.codeStack[depth] = this.codeStack[depth] || [];
+          this.codeStackDropdown[depth + 1] = this.codeStackDropdown[depth + 1] || [];
+          if (this.isSelected(node) && this.codeStack[depth].findIndex(it => it.id == node.id) < 0) {
+            this.codeStack[depth].push(node);
+            node.children?.forEach(child => {
+              this.codeStackDropdown[depth + 1].push(child);
+              child.parent = node;
+              child.groupBy = `${!!node?.groupBy ? (node.groupBy + ', ') : ''}${node.codeDisplay}`
+            });
+          }
+          return !!node?.children && this.isSelected(node);
+        }
+        , (node, _) => node.children || [], distance);
+    }
+  }
+
+  public get(): Ticket {
     this.item.id = this.item.id ?? '0';
+
     return this.item;
   }
 
-  public mapToDisplay(item: CodeModel): { display: string, id: CodeModel } {
-    return { display: item.codeDisplay!, id: item };
+  public getTitle(distance: number): string {
+    return this.codeStack[distance]
+      ?.filter(codeModel => this.isSelected(codeModel))
+      .map(t => t.codeDisplay).join(', ');
+  }
+
+  public hasSelectedChildren(distance: number): boolean {
+    return this.codeStack[distance]?.some(codeModel => this.isSelected(codeModel));
+  }
+
+  public mapToDisplay = (item: CodeModel): dropdown => {
+    return { display: item.codeDisplay!, id: item, groupBy: item.groupBy, selected: this.isSelected(item) };
+  }
+
+  private isSelected = (item: CodeModel): boolean => {
+    return !!this.map.get(item.id);
+  }
+
+  private toggleSelected = (item: CodeModel): void => {
+    this.map.set(item.id, !(this.map.has(item.id) && this.map.get(item.id)));
+  }
+
+  private processRecursive(
+    codes: CodeModel[],
+    parent: CodeModel,
+    callback: (code: CodeModel, parent: CodeModel, depth: number) => boolean,
+    next: (code: CodeModel, depth: number) => CodeModel[],
+    depth: number = 0
+  ): boolean {
+    var map: any = {};
+    codes.forEach((code) => map[code.id] = callback(code, parent, depth));
+    codes?.filter(item => map[item.id]).forEach(code =>
+      this.processRecursive(
+        next(code, depth + 1) || [],
+        code,
+        callback,
+        next,
+        depth + 1)
+    );
+    return true;
   }
 }

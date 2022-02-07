@@ -1,4 +1,6 @@
-export interface CodeModel {
+import { dropdown } from "./dropdown";
+
+export interface CodeModel extends dropdown {
     id: string;
     codeDisplay: string;
     codeValue: string;
@@ -9,5 +11,5 @@ export interface CodeModel {
     args: string;
     isRoot: boolean;
 
-    expanded: boolean;
+    parent: CodeModel;
 }

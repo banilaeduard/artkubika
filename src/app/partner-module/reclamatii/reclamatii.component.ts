@@ -64,6 +64,10 @@ export class ReclamatiiComponent implements OnInit, OnDestroy {
     ).subscribe(done);
   }
 
+  pageChanged($event: any) {
+    this.page = $event;
+  }
+
   public get page() {
     return this.paging.page;
   }

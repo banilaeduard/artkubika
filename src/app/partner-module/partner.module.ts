@@ -8,7 +8,8 @@ import { ReclamatiiComponent } from './reclamatii/reclamatii.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ReclamatieComponent } from './reclamatie/reclamatie.component';
 import { NgScrollbarModule } from 'ngx-scrollbar';
-import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgxPaginationModule } from 'ngx-pagination';
+
 const routes: Routes = [
   {
     path: '',
@@ -25,7 +26,7 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     NgScrollbarModule,
-    NgbPaginationModule,
+    NgxPaginationModule,
     RouterModule.forChild(routes)
   ],
   exports: [RouterModule],

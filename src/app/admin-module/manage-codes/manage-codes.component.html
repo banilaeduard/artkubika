@@ -27,7 +27,7 @@
                 <input placeholder="Value" type="text" [(ngModel)]="code.codeValue" class="form-control" />
                 <input placeholder="ValueFormat" type="text" [(ngModel)]="code.codeValueFormat" class="form-control" />
                 <app-dropdown class="item" [title]="code.attributeTags || 'Selectie atribute'" [items]="attributes"
-                    (itemClicked)="selectItem(code, $event)">
+                    (itemClicked)="selectItem(code, $event.id)">
                 </app-dropdown>
                 <fa-icon (click)="remove(parent, code, root)" icon="times"
                     [styles]="{ stroke: 'black', color: 'black' }" size="2x">
@@ -38,12 +38,12 @@
                 <fa-icon (click)="addChild(code)" icon="plus" [styles]="{ stroke: 'gray', color: 'black' }" size="2x">
                 </fa-icon>
 
-                <fa-icon *ngIf="code.children?.length > 0" (click)="code.expanded = !code.expanded" icon="plus"
+                <fa-icon *ngIf="code.children?.length > 0" (click)="code.selected = !code.selected" icon="plus"
                     [styles]="{ stroke: 'black', color: 'gray' }" size="2x">
                 </fa-icon>
             </td>
         </tr>
-        <div [style.padding-left.px]="distance * 20" *ngIf="code.expanded">
+        <div [style.padding-left.px]="distance * 20" *ngIf="code.selected">
             <ng-container
                 *ngTemplateOutlet="treeView;context:{ data: code.children, parent: code, root: root ?? code, distance: distance + 1}">
             </ng-container>
