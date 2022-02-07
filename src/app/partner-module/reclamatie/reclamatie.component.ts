@@ -31,7 +31,8 @@ export class ReclamatieComponent implements OnInit, OnChanges, OnDestroy {
   public ngOnChanges(changes: SimpleChanges): void {
     if (changes.item) {
       this.item = changes.item.currentValue || {};
-      if (!this.item.images) this.item.images = [];
+      this.item.images = this.item.images ?? [];
+      this.item.codeLinks = this.item.codeLinks ?? [];
     }
   }
 
@@ -72,9 +73,18 @@ export class ReclamatieComponent implements OnInit, OnChanges, OnDestroy {
           this.codeStackDropdown[depth + 1] = this.codeStackDropdown[depth + 1]?.filter(t => t.parent.id != node.id);
           this.codeStack[depth] = this.codeStack[depth]?.filter(t => t.id != node.id);
 
+          const ticketItem = this.item.codeLinks.findIndex(t => t.id == node.id);
+          const siblingIndex = this.codeStack[depth].findIndex(t => t.parent?.id == node.parent?.id);
+          if (ticketItem > -1) {
+            const [removed] = this.item.codeLinks.splice(ticketItem, 1);
+            // in caz ca se descompleteaza complet un produs atunci incercam sa selectam parintele
+            if (siblingIndex < 0 && depth == distance) {
+              this.isSelected(node.parent) && this.item.codeLinks.push(node.parent);
+            }
+          }
           return !!node.children;
         }
-        , (node, _) => node.children || [], distance
+        , (node, _) => node.children?.filter(child => this.isSelected(child)) || [], distance
       );
     else {
       this.processRecursive(
@@ -91,15 +101,21 @@ export class ReclamatieComponent implements OnInit, OnChanges, OnDestroy {
               child.groupBy = `${!!node?.groupBy ? (node.groupBy + ', ') : ''}${node.codeDisplay}`
             });
           }
+
+          if (this.isSelected(node)) {
+            const itemIndex = this.item.codeLinks.findIndex(t => t.id == node.id);
+            const parentIndex = this.item.codeLinks.findIndex(t => t.id == node.parent?.id);
+            itemIndex < 0 && this.item.codeLinks.push(node);
+            parentIndex > -1 && this.item.codeLinks.splice(parentIndex, 1);
+          }
           return !!node?.children && this.isSelected(node);
         }
-        , (node, _) => node.children || [], distance);
+        , (node, _) => node?.children || [], distance);
     }
   }
 
   public get(): Ticket {
     this.item.id = this.item.id ?? '0';
-
     return this.item;
   }
 
@@ -118,7 +134,7 @@ export class ReclamatieComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private isSelected = (item: CodeModel): boolean => {
-    return !!this.map.get(item.id);
+    return item && !!this.map.get(item.id);
   }
 
   private toggleSelected = (item: CodeModel): void => {
