@@ -23,7 +23,6 @@ export class DropdownComponent implements OnInit, DoCheck {
   ngDoCheck(): void {
     const changes: IterableChanges<any> = this.iterableDiffer.diff(this.items)!;
     if (changes) {
-      console.log(changes);
       changes.forEachAddedItem(iterableItem => {
         const filterableItem = iterableItem.item
         this.filteredItems.push({

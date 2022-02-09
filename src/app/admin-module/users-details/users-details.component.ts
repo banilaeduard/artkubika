@@ -36,7 +36,9 @@ export class UsersDetailsComponent implements OnInit {
     }
 
     public deleteUser = (user: UserModel): void => {
-        this.userDetailsService.deteleUser(user.userName).subscribe(this.syncUsers);
+        if (confirm(`Stergeti userul ${user.userName}?`)) {
+            this.userDetailsService.deteleUser(user.userName).subscribe(this.syncUsers);
+        }
     }
 
     public editRoles = (user: UserModel): void => {

@@ -23,6 +23,7 @@ export class ManageCodesService {
   }
 
   public deleteCodes(codes: CodeModel[]): Observable<any> {
+    codes.forEach(code => code.children = []);
     return this.httpClient.post('codes/delete', codes);
   }
 }

@@ -44,17 +44,19 @@ export class ManageCodesComponent implements OnInit {
   }
 
   remove(parent: CodeModel, node: CodeModel, root: CodeModel) {
-    if (parent) {
-      const [toRemove] = (parent.children || []).splice(parent.children?.findIndex(t => t == node) || -1, 1);
-      if (toRemove?.id) {
-        this.manageCodesService.updateCodes([root]).pipe(
-          switchMap(_ => this.manageCodesService.deleteCodes([node]))
-        ).subscribe();
-      }
-    } else {
-      const [toRemove] = this.codes.splice(this.codes.findIndex(t => t == node), 1);
-      if (toRemove.id) {
-        this.manageCodesService.deleteCodes([toRemove]).subscribe();
+    if (root || confirm(`Stergeti intrarea ${node.codeDisplay}?`)) {
+      if (parent) {
+        const [toRemove] = (parent.children || []).splice(parent.children?.findIndex(t => t == node) || -1, 1);
+        if (toRemove?.id) {
+          this.manageCodesService.updateCodes([root]).pipe(
+            switchMap(_ => this.manageCodesService.deleteCodes([node]))
+          ).subscribe();
+        }
+      } else {
+        let [toRemove] = this.codes.splice(this.codes.findIndex(t => t == node), 1);
+        if (toRemove.id) {
+          this.manageCodesService.deleteCodes([toRemove]).subscribe();
+        }
       }
     }
   }

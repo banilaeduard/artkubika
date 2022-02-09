@@ -15,6 +15,7 @@ export class CodesService {
   constructor(private httpClient: HttpClient) {
     this.sharedRep = this.httpClient.get<CodeModel[]>('codes').pipe(
       map(codes => {
+        console.log(codes);
         this.codePaths = new Map();
         // init code paths
         this.processRecursive(codes.filter(t => !!t.codeDisplay && t.isRoot), undefined, (node, parent, depth) => {
@@ -22,6 +23,7 @@ export class CodesService {
           // so we recreate the parent stuff
           node.display = node.codeDisplay;
           node.parent = parent;
+          node.selected = false;
           node.id = `${node.id}`;
           if (parent) {
             node.groupBy = `${!!parent?.groupBy ? (parent.groupBy + ', ') : ''}${parent.codeDisplay}`;
@@ -35,7 +37,9 @@ export class CodesService {
           return !!node.children;
         },
           (node, depth) => node.children!, 0);
-        return codes.filter(t => !!t.codeDisplay);
+        console.log(codes);
+        console.log(codes.filter(t => !!t.codeDisplay && this.codePaths.has(t.id)));
+        return codes.filter(t => !!t.codeDisplay && this.codePaths.has(`${t.id}`));
       }),
       publishReplay(1, 5 * 60 * 1000),
       refCount(),
@@ -46,7 +50,7 @@ export class CodesService {
   public getCodes(): Observable<CodeModel[]> {
     return this.sharedRep.pipe(map(items => {
       const agg: CodeModel[] = [];
-      items.forEach(it => agg.push({ ...it }));
+      items.forEach(it => agg.push({ ...it, selected: false }));
       return agg;
     }));
   }
@@ -57,7 +61,7 @@ export class CodesService {
     );
   }
 
-  private processRecursive(
+  public processRecursive(
     codes: CodeModel[],
     parent: CodeModel | undefined,
     callback: (code: CodeModel, parent: CodeModel | undefined, depth: number) => boolean,
