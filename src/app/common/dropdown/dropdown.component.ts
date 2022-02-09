@@ -1,4 +1,4 @@
-import { Component, DoCheck, EventEmitter, Input, IterableChanges, IterableDiffer, IterableDiffers, OnInit, Output } from '@angular/core';
+import { Component, DoCheck, EventEmitter, Input, IterableChanges, IterableDiffer, IterableDiffers, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { dropdown } from 'src/app/models/dropdown';
 
 @Component({
@@ -7,37 +7,32 @@ import { dropdown } from 'src/app/models/dropdown';
   styleUrls: ['./dropdown.component.less']
 })
 export class DropdownComponent implements OnInit, DoCheck {
-  @Input() items!: any[];
+  @Input() items!: dropdown[];
   @Input() title!: string;
-  @Input() mapToDisplay!: (model: any) => dropdown;
   @Output() itemClicked: EventEmitter<any> = new EventEmitter<any>();
 
   iterableDiffer: IterableDiffer<any>;
   searchValue: string = '';
-  filteredItems: { displayItem: dropdown, visible: boolean, localSelected: boolean }[];
+  filteredItems: { displayItem: dropdown, visible: boolean }[];
 
   constructor(iterableDiffers: IterableDiffers) {
     this.iterableDiffer = iterableDiffers.find([]).create(undefined);
-    this.mapToDisplay = (item) => {
-      if (item.display) return { display: item.display, id: item, groupBy: item.groupBy || '' } as dropdown;
-      return { display: Object.toString.apply(item), id: item, groupBy: item.groupBy || '' } as dropdown;
-    }
     this.filteredItems = [];
   }
 
   ngDoCheck(): void {
     const changes: IterableChanges<any> = this.iterableDiffer.diff(this.items)!;
     if (changes) {
+      console.log(changes);
       changes.forEachAddedItem(iterableItem => {
-        const filterableItem = this.mapToDisplay(iterableItem.item)
+        const filterableItem = iterableItem.item
         this.filteredItems.push({
           visible: this.match(filterableItem),
-          displayItem: filterableItem,
-          localSelected: filterableItem.selected
+          displayItem: filterableItem
         })
       });
       changes.forEachRemovedItem(iterableItem => {
-        const index = this.filteredItems.findIndex(t => t.displayItem.id === iterableItem.item);
+        const index = this.filteredItems.findIndex(t => t.displayItem.id === iterableItem.item.id);
         if (index > -1) {
           this.filteredItems.splice(index, 1);
         }
@@ -61,12 +56,12 @@ export class DropdownComponent implements OnInit, DoCheck {
       || item.groupBy.toLocaleLowerCase().indexOf(this.searchValue.toLocaleLowerCase()) !== -1;
   }
 
-  public clicked = (item: { displayItem: dropdown, visible: boolean, localSelected: boolean }) => {
+  public clicked = (item: { displayItem: dropdown, visible: boolean }) => {
     if (!this.title) {
       this.title = this.filteredItems.find(t => t == item)?.displayItem.display;
     }
     // toggle
     item.displayItem.selected = !item.displayItem.selected;
-    this.itemClicked.emit(item.displayItem.id);
+    this.itemClicked.emit(item.displayItem);
   }
 }

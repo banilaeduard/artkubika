@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { switchMap, tap } from 'rxjs/operators';
 import { CodeModel } from 'src/app/models/CodeModel';
 import { dropdown } from 'src/app/models/dropdown';
 import { Ticket } from 'src/app/models/Ticket';
@@ -10,22 +11,20 @@ import { CodesService } from '../codes.service';
   styleUrls: ['./reclamatie.component.less']
 })
 export class ReclamatieComponent implements OnInit, OnChanges, OnDestroy {
-  codeStack: CodeModel[][];
-  codeStackDropdown: CodeModel[][];
-  map: Map<string, boolean> = new Map();
-  attributeStack!: []
   @Input() item: Ticket;
 
-  selectedItem: CodeModel | undefined;
+  codeStack: CodeModel[][];
+  codeStackDropdown: CodeModel[][];
+  attributeStack!: [];
+  private codePaths!: Map<string, string[]>;
+
   constructor(private codesService: CodesService) {
     this.item = {} as Ticket;
     this.codeStackDropdown = [];
     this.codeStack = [];
   }
+
   ngOnDestroy(): void {
-    this.codeStackDropdown[0] && this.codeStackDropdown[0].forEach(code =>
-      this.isSelected(code) && this.toggleSelected(code)
-    );
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
@@ -33,15 +32,19 @@ export class ReclamatieComponent implements OnInit, OnChanges, OnDestroy {
       this.item = changes.item.currentValue || {};
       this.item.images = this.item.images ?? [];
       this.item.codeLinks = this.item.codeLinks ?? [];
+      this.codePaths && this.item.codeLinks && this.initDropdownsFromItem();
     }
   }
 
   public ngOnInit(): void {
     this.codeStackDropdown.push([]);
-    this.codesService.getCodes().subscribe(codes => {
-      codes.forEach(item => item.isRoot ? this.codeStackDropdown[0].push(item) : "");
-    }
-    );
+    this.codesService.getCodes().pipe(
+      tap(codes => codes.forEach(item => item.isRoot ? this.codeStackDropdown[0].push(item) : "")),
+      switchMap(_ => this.codesService.getTrie())
+    ).subscribe(trieMap => {
+      this.codePaths = trieMap;
+      this.initDropdownsFromItem();
+    });
   }
 
   public delete(index: number) {
@@ -61,44 +64,41 @@ export class ReclamatieComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public selectItem(code: CodeModel, distance: number) {
-    this.toggleSelected(code);
     this.codeStack[distance] = this.codeStack[distance] || [];
     this.codeStackDropdown[distance + 1] = this.codeStackDropdown[distance + 1] || [];
 
-    if (!this.isSelected(code))
-      this.processRecursive(
-        [code]
-        , code.parent
-        , (node, _, depth) => {
-          this.codeStackDropdown[depth + 1] = this.codeStackDropdown[depth + 1]?.filter(t => t.parent.id != node.id);
-          this.codeStack[depth] = this.codeStack[depth]?.filter(t => t.id != node.id);
-
+    const entryPath = this.codePaths.get(code.id)!;
+    if (!this.isSelected(code)) {
+      for (let i = entryPath.length - 1, nodes = [code];
+        i < this.codeStack.length; i++,
+        nodes = nodes.flatMap(t => t.selected ? (t.children || []) : [])
+      ) {
+        for (let currentIndex = 0, node = nodes[0]; currentIndex < nodes.length; currentIndex++, node = nodes[currentIndex]) {
+          this.codeStackDropdown[i + 1] = this.codeStackDropdown[i + 1]?.filter(t => t.parent?.id != node.id);
+          this.codeStack[i] = this.codeStack[i]?.filter(t => t.id != node.id);
           const ticketItem = this.item.codeLinks.findIndex(t => t.id == node.id);
-          const siblingIndex = this.codeStack[depth].findIndex(t => t.parent?.id == node.parent?.id);
+          const siblingIndex = this.codeStack[i].findIndex(t => t.parent?.id == node.parent?.id);
           if (ticketItem > -1) {
             const [removed] = this.item.codeLinks.splice(ticketItem, 1);
             // in caz ca se descompleteaza complet un produs atunci incercam sa selectam parintele
-            if (siblingIndex < 0 && depth == distance) {
-              this.isSelected(node.parent) && this.item.codeLinks.push(node.parent);
+            if (siblingIndex < 0 && i == distance) {
+              this.isSelected(node.parent) && this.item.codeLinks.push(node.parent!);
             }
           }
-          return !!node.children;
         }
-        , (node, _) => node.children?.filter(child => this.isSelected(child)) || [], distance
-      );
-    else {
-      this.processRecursive(
-        [code]
-        , code
-        , (node, _, depth) => {
-          this.codeStack[depth] = this.codeStack[depth] || [];
-          this.codeStackDropdown[depth + 1] = this.codeStackDropdown[depth + 1] || [];
-          if (this.isSelected(node) && this.codeStack[depth].findIndex(it => it.id == node.id) < 0) {
-            this.codeStack[depth].push(node);
+      }
+    } else {
+      for (let i = entryPath.length - 1, nodes = [code];
+        i < this.codeStack.length; i++,
+        nodes = nodes.flatMap(t => t.selected ? (t.children || []) : [])
+      ) {
+        for (let currentIndex = 0, node = nodes[0]; currentIndex < nodes.length; currentIndex++, node = nodes[currentIndex]) {
+          this.codeStack[i] = this.codeStack[i] || [];
+          this.codeStackDropdown[i + 1] = this.codeStackDropdown[i + 1] || [];
+          if (this.isSelected(node) && this.codeStack[i].findIndex(it => it.id == node.id) < 0) {
+            this.codeStack[i].push(node);
             node.children?.forEach(child => {
-              this.codeStackDropdown[depth + 1].push(child);
-              child.parent = node;
-              child.groupBy = `${!!node?.groupBy ? (node.groupBy + ', ') : ''}${node.codeDisplay}`
+              this.codeStackDropdown[i + 1].push(child);
             });
           }
 
@@ -108,15 +108,24 @@ export class ReclamatieComponent implements OnInit, OnChanges, OnDestroy {
             itemIndex < 0 && this.item.codeLinks.push(node);
             parentIndex > -1 && this.item.codeLinks.splice(parentIndex, 1);
           }
-          return !!node?.children && this.isSelected(node);
         }
-        , (node, _) => node?.children || [], distance);
+      }
     }
   }
+
 
   public get(): Ticket {
     this.item.id = this.item.id ?? '0';
     return this.item;
+  }
+
+  public deleteNode(codeLink: CodeModel, index: number) {
+    const entryPath = this.codePaths.get(codeLink.codeValue);
+    this.item.codeLinks.splice(index, 1);
+    if (entryPath) {
+      this.setSelected(this.codeStack[entryPath.length - 1].find(t => t.id == entryPath[entryPath.length - 1])!, false);
+      this.selectItem(codeLink, entryPath.length - 1);
+    }
   }
 
   public getTitle(distance: number): string {
@@ -129,35 +138,46 @@ export class ReclamatieComponent implements OnInit, OnChanges, OnDestroy {
     return this.codeStack[distance]?.some(codeModel => this.isSelected(codeModel));
   }
 
-  public mapToDisplay = (item: CodeModel): dropdown => {
-    return { display: item.codeDisplay!, id: item, groupBy: item.groupBy, selected: this.isSelected(item) };
+  private isSelected = (item: CodeModel | undefined): boolean => {
+    return !!item?.selected;
   }
 
-  private isSelected = (item: CodeModel): boolean => {
-    return item && !!this.map.get(item.id);
+  private setSelected = (item: CodeModel, selected: boolean): void => {
+    item.selected = selected;
   }
 
-  private toggleSelected = (item: CodeModel): void => {
-    this.map.set(item.id, !(this.map.has(item.id) && this.map.get(item.id)));
+  private trimCodeModelForLinksSnapshot = (code: CodeModel): CodeModel => {
+    return { ...code, children: undefined, parent: undefined, id: '0', codeValue: code.id };
   }
 
-  private processRecursive(
-    codes: CodeModel[],
-    parent: CodeModel,
-    callback: (code: CodeModel, parent: CodeModel, depth: number) => boolean,
-    next: (code: CodeModel, depth: number) => CodeModel[],
-    depth: number = 0
-  ): boolean {
-    var map: any = {};
-    codes.forEach((code) => map[code.id] = callback(code, parent, depth));
-    codes?.filter(item => map[item.id]).forEach(code =>
-      this.processRecursive(
-        next(code, depth + 1) || [],
-        code,
-        callback,
-        next,
-        depth + 1)
-    );
-    return true;
+  private initDropdownsFromItem() {
+    this.item.codeLinks?.forEach(codeLink => {
+      const entryPath = this.codePaths.get(codeLink.codeValue)!;
+      // exista si cazul sa nu fie gasit in caz ca se sterge o intrare mai veche care nu mai exista in tabela de coduri
+      // vedem cum facem handle la acest caz (display in alta culoare si selectare noului produs cu codul respectiv)
+      if (entryPath && entryPath.length > 1) { // daca nu e root node
+        for (let i = 0, parent = entryPath[0]; i < entryPath.length; parent = entryPath[i], i++) {
+          this.codeStack[i] = this.codeStack[i] ?? [];
+          this.codeStackDropdown[i + 1] = this.codeStackDropdown[i + 1] ?? [];
+          // we need the actual codes to recreate the dropdowns
+          // codeLinks are just snapshots of codes without the hierarchy data
+          const parentCode = i > 0 ?
+            this.codeStack[i - 1].find(parentCode => parentCode.id == parent)
+            : this.codeStackDropdown[0].find(t => t.id == parent); // pentru root cautam in dropdown-ul populat initial
+          const currentCode = i > 0 ? parentCode?.children?.find(t => t.id == entryPath[i]) : parentCode;
+          const nodeIndex = this.codeStack[i].findIndex(code => code.id == entryPath[i]);
+          const nodeDropdownIndex = this.codeStackDropdown[i + 1].findIndex(code => code?.parent?.id == entryPath[i]);
+          if (nodeIndex < 0) {
+            this.codeStack[i].push(currentCode!);
+            this.setSelected(currentCode!, true);
+          }
+
+          if (nodeDropdownIndex < 0 && currentCode?.children) {
+            currentCode?.children.forEach(child => child.groupBy = `${!!currentCode?.groupBy ? (currentCode.groupBy + ', ') : ''}${currentCode.codeDisplay}`);
+            this.codeStackDropdown[i + 1] = this.codeStackDropdown[i + 1].concat(currentCode?.children);
+          }
+        }
+      }
+    });
   }
 }
