@@ -1,5 +1,6 @@
-<app-header id="header"></app-header>
 <ng-scrollbar #scrollable id="content" [track]="'all'" [visibility]="'always'">
+    <app-header id="header"></app-header>
     <router-outlet (activate)='onActivate($event)'></router-outlet>
+    <div class="push"></div>
 </ng-scrollbar>
 <app-footer id="footer"></app-footer>

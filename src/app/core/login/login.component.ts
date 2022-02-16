@@ -15,6 +15,7 @@ import { UserManagerService } from '../services/user.manager.service';
 })
 export class LoginComponent implements OnInit, OnDestroy {
   loginForm!: FormGroup;
+  order!: FormGroup;
   loading = false;
   submitted = false;
   returnUrl!: string;
@@ -26,7 +27,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     private router: Router,
     private authenticationService: AuthentificationService,
     private userManagerService: UserManagerService,
-    // private socialLogin: SocialAuthService,
     private toastr: ToastrService
   ) {
   }
@@ -38,6 +38,10 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.loginForm = this.formBuilder.group({
       username: ['', Validators.required],
       password: ['', Validators.required]
+    });
+
+    this.order = this.formBuilder.group({
+      orderId: ['']
     });
 
     // reset login status
@@ -54,6 +58,10 @@ export class LoginComponent implements OnInit, OnDestroy {
   // convenience getter for easy access to form fields
   get f() { return this.loginForm.controls; }
 
+  onSubmitOrder() {
+
+  }
+
   onSubmit() {
     this.submitted = true;
 
@@ -66,9 +74,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.authenticationService.login(this.f['username'].value, this.f['password'].value)
       .pipe(first())
       .subscribe({
-        next: data => {
-          this.router.navigate([this.returnUrl]);
-        },
+        next: _ => this.router.navigate([this.returnUrl]),
         error: response => {
           this.toastr.error(response.error.message, 'Login error', { disableTimeOut: true });
           this.loading = false;

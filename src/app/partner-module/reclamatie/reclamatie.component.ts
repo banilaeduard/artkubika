@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { switchMap, tap } from 'rxjs/operators';
 import { CodeModel } from 'src/app/models/CodeModel';
-import { dropdown } from 'src/app/models/dropdown';
+import { Images } from 'src/app/models/Images';
 import { Ticket } from 'src/app/models/Ticket';
 import { CodesService } from '../codes.service';
 
@@ -31,6 +31,8 @@ export class ReclamatieComponent implements OnInit, OnChanges, OnDestroy {
     if (changes.item) {
       this.item = changes.item.currentValue || {};
       this.item.images = this.item.images ?? [];
+      this.item.toAddImages = this.item.toAddImages || [];
+      this.item.toDeleteImages = this.item.toDeleteImages || [];
       this.item.codeLinks = this.item.codeLinks ?? [];
       this.codePaths && this.item.codeLinks && this.initDropdownsFromItem();
     }
@@ -40,15 +42,21 @@ export class ReclamatieComponent implements OnInit, OnChanges, OnDestroy {
     this.codeStackDropdown.push([]);
     this.codesService.getCodes().pipe(
       tap(codes => codes.forEach(item => item.isRoot ? this.codeStackDropdown[0].push(item) : "")),
-      switchMap(_ => this.codesService.getTrie())
-    ).subscribe(trieMap => {
-      this.codePaths = trieMap;
+      switchMap(codes => this.codesService.getPaths(codes))
+    ).subscribe(paths => {
+      this.codePaths = paths;
       this.initDropdownsFromItem();
     });
   }
 
-  public delete(index: number) {
+  public delete(index: number, imageSrc: any) {
     this.item.images.splice(index, 1);
+
+    if (imageSrc.id && imageSrc.id != '0')
+      this.item.toDeleteImages.push({ id: imageSrc.id } as Images);
+    else {
+      this.item.toAddImages.splice(this.item.toAddImages.findIndex(t => t.title == imageSrc.title));
+    }
   }
 
   public onFileChange(event: any) {
@@ -57,6 +65,9 @@ export class ReclamatieComponent implements OnInit, OnChanges, OnDestroy {
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = () => {
+          const dataImage = reader.result as string;
+          const base64 = dataImage.substring(dataImage.indexOf("base64,") + "base64,".length, dataImage.length);
+          this.item.toAddImages.push({ data: base64, title: file.name, id: '0' });
           this.item.images.push({ data: reader.result as string, title: file.name, id: '0' });
         };
       }
@@ -110,7 +121,7 @@ export class ReclamatieComponent implements OnInit, OnChanges, OnDestroy {
             itemIndex < 0 && this.item.codeLinks.push(this.trimCodeModelForLinksSnapshot(node));
             parentIndex > -1 && this.item.codeLinks.splice(parentIndex, 1);
           }
-          return !!node?.children && this.isSelected(node);
+          return !!node?.children;
         }
         , (node, _) => node?.children || [], distance);
     }

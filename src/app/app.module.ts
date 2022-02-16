@@ -116,6 +116,7 @@ export class AppModule {
 declare global {
   interface String {
     hashCode(): number;
+    getUniqueId(): string;
   }
 }
 
@@ -129,6 +130,16 @@ String.prototype.hashCode = () => {
     hash |= 0; // Convert to 32bit integer
   }
   return hash;
+};
+
+String.prototype.getUniqueId = () => {
+  const stringArr = [];
+  for (let i = 0; i < 4; i++) {
+    // tslint:disable-next-line:no-bitwise
+    const S4 = (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+    stringArr.push(S4);
+  }
+  return stringArr.join('-');
 };
 
 console.log("".hashCode());

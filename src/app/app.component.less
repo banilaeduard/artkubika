@@ -2,19 +2,28 @@
     display       : flex;
     flex-direction: column;
     flex-wrap     : wrap;
+    margin        : 0;
 }
 
 #content {
     display        : flex;
     align-items    : center;
     justify-content: center;
-    margin-top     : 1em;
-    border-radius  : 15px;
-    min-height     : 80vh;
-    min-width      : 30vw;
+    min-height     : 100vh;
+
+    /* Equal to height of footer */
+    /* But also accounting for potential margin-bottom of last child */
+    margin-bottom: -25px;
+}
+
+#footer,
+.push {
+    height: 35px;
+
 }
 
 #footer {
-    width : 50%;
-    margin: 0 auto;
+    background-color: rgb(13, 202, 240);
+    opacity         : 100;
+    z-index         : 9999;
 }

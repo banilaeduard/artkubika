@@ -1,8 +1,9 @@
+# Reclamatii
 <table class="table table-striped table-hover" style="width: 100v;">
     <thead>
         <tr>
-            <th scope="col" style="width: 10%;"># Reclamatii</th>
-            <th scope="col" style="width: 70%;">
+            <th scope="col">#</th>
+            <th scope="col">
                 <div class="d-flex justify-content-center">
                     <pagination-controls id="foo" (pageChange)="page = $event" (pageBoundsCorrection)="page = $event"
                         maxSize="9" directionLinks="true" autoHide="true" responsive="true" previousLabel="Previous"
@@ -15,9 +16,9 @@
                 <fa-icon class="nav-item" icon="plus-square" [styles]="{ stroke: 'black', color: 'black' }" size="2x">
                 </fa-icon>
             </th>
-            <th>
+            <!-- <th>
                 DataKey
-            </th>
+            </th> -->
         </tr>
     </thead>
     <tbody>
@@ -25,8 +26,8 @@
                                                       itemsPerPage: paging.pageSize,
                                                       currentPage: page,
                                                       totalItems: paging.collectionSize }; index as i">
-            <td style=" width: 10%;" scope="row">{{i + 1}}</td>
-            <td style="width: 70%;">
+            <td style="width: 5%; border-right: solid;" scope="row">{{i + 1}}</td>
+            <td>
                 <table class="table table-sm">
                     <thead>
                         <tr>
@@ -64,9 +65,9 @@
                 </table>
             </td>
 
-            <td style="width: 15%;">
+            <!-- <td style="width: 15%;">
                 {{item?.dataKey}}
-            </td>
+            </td> -->
 
         </tr>
     </tbody>

@@ -1,64 +1,43 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
-import { map, publishReplay, refCount, take, tap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
 import { CodeModel } from '../models/CodeModel';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CodesService {
-  private sharedRep: Observable<CodeModel[]>;
-  private codePaths!: Map<string, string[]>;
-
   constructor(private httpClient: HttpClient) {
-    this.sharedRep = this.httpClient.get<CodeModel[]>('codes').pipe(
-      map(codes => {
-        console.log(codes);
-        this.codePaths = new Map();
-        // init code paths
-        this.processRecursive(codes.filter(t => !!t.codeDisplay && t.isRoot), undefined, (node, parent, depth) => {
-          // we have problem sending the parent data into request because of circular dependencies
-          // so we recreate the parent stuff
-          node.display = node.codeDisplay;
-          node.parent = parent;
-          node.selected = false;
-          node.id = `${node.id}`;
-          if (parent) {
-            node.groupBy = `${!!parent?.groupBy ? (parent.groupBy + ', ') : ''}${parent.codeDisplay}`;
-          }
-          if (parent) {
-            this.codePaths.set(node.id, Object.assign([], this.codePaths.get(parent.id)));
-          } else {
-            this.codePaths.set(node.id, [node.id]);
-          }
-          depth > 0 && this.codePaths.get(node.id)?.push(node.id);
-          return !!node.children;
-        },
-          (node, depth) => node.children!, 0);
-        console.log(codes);
-        console.log(codes.filter(t => !!t.codeDisplay && this.codePaths.has(t.id)));
-        return codes.filter(t => !!t.codeDisplay && this.codePaths.has(`${t.id}`));
-      }),
-      publishReplay(1, 5 * 60 * 1000),
-      refCount(),
-      take(1)
-    );
   }
 
   public getCodes(): Observable<CodeModel[]> {
-    return this.sharedRep.pipe(map(items => {
-      const agg: CodeModel[] = [];
-      items.forEach(it => agg.push({ ...it, selected: false }));
-      return agg;
-    }));
+    return this.httpClient.get<CodeModel[]>('codes');
   }
 
-  public getTrie(): Observable<Map<string, string[]>> {
-    return this.sharedRep.pipe(
-      map(_ => new Map(this.codePaths))
-    );
+  public getPaths(items: CodeModel[]): Observable<Map<string, string[]>> {
+    const codePaths = new Map<string, string[]>();
+    // init code paths
+    this.processRecursive(items.filter(t => t.isRoot), undefined, (node, parent, depth) => {
+      // we have problem sending the parent data into request because of circular dependencies
+      // so we recreate the parent stuff
+      node.display = node.codeDisplay;
+      node.parent = parent;
+      node.selected = false;
+      node.id = `${node.id}`;
+      if (parent) {
+        node.groupBy = `${!!parent?.groupBy ? (parent.groupBy + ', ') : ''}${parent.codeDisplay}`;
+      }
+      if (parent) {
+        codePaths.set(node.id, Object.assign([], codePaths.get(parent.id)));
+      } else {
+        codePaths.set(node.id, [node.id]);
+      }
+      depth > 0 && codePaths.get(node.id)?.push(node.id);
+      return !!node.children;
+    },
+      (node, depth) => node.children!, 0);
+
+    return of(codePaths);
   }
 
   public processRecursive(

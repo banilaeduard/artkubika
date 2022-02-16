@@ -8,9 +8,17 @@
 :host form {
     display        : flex;
     flex-direction : column;
-    min-width      : 25vw;
+    min-width      : 20em;
     align-items    : center;
     justify-content: center;
+
+    .form-group {
+        width: fit-content;
+
+        input {
+            width: 15em;
+        }
+    }
 
     button {
         margin-top     : 0.75em;

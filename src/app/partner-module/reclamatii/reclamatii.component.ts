@@ -50,16 +50,11 @@ export class ReclamatiiComponent implements OnInit, OnDestroy {
   }
 
   editTicket(complaint: ComplaintModel, ticket: Ticket) {
-    if (ticket.hasImages && !ticket.images?.length) {
-      this.complaintService.fetchImages(ticket)
-        .subscribe(ticket =>
-          this._next.next({ model: complaint, data: { header: 'Reclamatie componenta', ticket } }));
-    } else
-      this._next.next({ model: complaint, data: { header: 'Reclamatie componenta', ticket } });
+    this._next.next({ model: complaint, data: { header: 'Reclamatie componenta', ticket } });
   }
 
   save(ticket: Ticket, complaint: ComplaintModel, done: () => boolean) {
-    this.complaintService.save({ ...complaint, tickets: [ticket] }).pipe(
+    this.complaintService.save({ ...complaint, tickets: [{ ...ticket, images: [] }] }).pipe(
       tap(item => Object.assign(complaint, item))
     ).subscribe(done);
   }

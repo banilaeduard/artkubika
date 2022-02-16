@@ -24,8 +24,4 @@ export class ComplaintService {
   public save(complaint: ComplaintModel): Observable<ComplaintModel> {
     return this.http.post<ComplaintModel>('ticket', complaint)
   }
-
-  public fetchImages(ticket: Ticket): Observable<Ticket> {
-    return this.http.post<Ticket>('ticket/images', ticket);
-  }
 }
