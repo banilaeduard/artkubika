@@ -1,47 +1,48 @@
-<ng-scrollbar #scrollable class="content" [track]="'vertical'">
-    <div class="fixedContainer">
+<div class="content">
+    <div *ngIf="item.codeLinks.length > 0" class="codesContainerInfo">
         <button *ngFor="let code of item.codeLinks; index as i;" type="button"
-            class="btn btn-light btn-outline-secondary">
+            class="btn btn-light btn-outline-secondary" (click)="deleteNode(code, i)">
             <span class="btn-label">
-                <fa-icon (click)="deleteNode(code, i)" class="delete-icon" icon="trash-alt"
-                    [styles]="{ stroke: 'black', color: 'black'}" size="0.5x">
+                <fa-icon class="delete-icon" icon="trash-alt" [styles]="{ stroke: 'black', color: 'black'}" size="0.5x">
                 </fa-icon>
             </span>{{code.codeDisplay}}</button>
-
-        <button type="button" class="btn btn-info btn-outline-dark">
-            <span class="btn-label">
-                <fa-icon class="delete-icon" icon="plus-square" [styles]="{ stroke: 'gray', color: 'gray'}" size="0.5x">
-                </fa-icon>
-            </span>Cauta colet dupa cod</button>
-        <div>Adaugati imagini cu coletele cu probleme</div>
-        <div class="fixedContainer">
-            <input id="file" multiple type="file" class="form-control" (change)="onFileChange($event)">
-        </div>
     </div>
+    <button type="button" class="btn btn-info btn-outline-dark">
+        <span class="btn-label">
+            <fa-icon class="delete-icon" icon="plus-square" [styles]="{ stroke: 'gray', color: 'gray'}" size="0.5x">
+            </fa-icon>
+        </span>Cauta colet dupa cod</button>
+
     <div>Selectati un colet cu probleme</div>
     <ng-container *ngTemplateOutlet="treeView; context:{distance: 0} ">
     </ng-container>
-    <textarea maxlength="500" class="item item-height-100" placeholder="Description" type="textarea"
+    <textarea maxlength="500" class="item" placeholder="Descriere" type="textarea"
         [(ngModel)]="item.description"></textarea>
-    <div class="item-height-250">
-        <div *ngIf="item?.images?.length">
-            <div class="codesContainerInfo" *ngFor="let imageSrc of item.images; index as i">
-                <img [src]="imageSrc.data" style="max-height: 250px; max-width:250px" />
-                <fa-icon (click)="delete(i, imageSrc)" icon="times" [styles]="{ stroke: 'black', color: 'black' }"
-                    size="2x">
-                </fa-icon>
-            </div>
+
+    <div class="sticky-top">
+        <label for="file">Adaugati imagini cu coletele cu probleme</label>
+        <input id="file" multiple type="file" class="form-control" (change)="onFileChange($event)">
+    </div>
+    <div *ngIf="item?.images?.length" style="padding-bottom: 2em;">
+        <div class="codesContainerInfo" *ngFor="let imageSrc of item.images; index as i">
+            <img [src]="imageSrc.data" style="max-height: 250px; max-width:250px" />
+            <fa-icon (click)="delete(i, imageSrc)" icon="times" [styles]="{ stroke: 'black', color: 'black' }"
+                size="2x">
+            </fa-icon>
         </div>
     </div>
-</ng-scrollbar>
-
-<ng-template #treeView let-distance="distance">
-    <app-dropdown *ngIf="codeStackDropdown[distance]?.length" class="item" [items]="codeStackDropdown[distance]"
-        [title]="this.codeStack[distance]?.length > 0 ? getTitle(distance) : 'Selectati itemul'"
-        (itemClicked)="selectItem($event, distance)">
-    </app-dropdown>
-    <div *ngIf="hasSelectedChildren(distance)">
-        <ng-container *ngTemplateOutlet="treeView;context:{distance: distance + 1}">
-        </ng-container>
+    <div class="sticky-bottom">
+        <button (click)="save()" class="btn btn-primary">Salveaza</button>
     </div>
-</ng-template>
+
+    <ng-template #treeView let-distance="distance">
+        <app-dropdown *ngIf="codeStackDropdown[distance]?.length" class="item" [items]="codeStackDropdown[distance]"
+            [title]="this.codeStack[distance]?.length > 0 ? getTitle(distance) : 'Selectati coletul'"
+            (itemClicked)="selectItem($event, distance)">
+        </app-dropdown>
+        <div *ngIf="hasSelectedChildren(distance)">
+            <ng-container *ngTemplateOutlet="treeView;context:{distance: distance + 1}">
+            </ng-container>
+        </div>
+    </ng-template>
+</div>

@@ -14,6 +14,10 @@ const routes: Routes = [
   {
     path: '',
     component: ReclamatiiComponent
+  },
+  {
+    path: 'reclamatie',
+    component: ReclamatieComponent
   }
 ];
 

@@ -16,7 +16,11 @@
         <ngx-navbar-collapse id="main-nav" #collapse="ngxNavbarCollapse">
             <ul class="navbar-nav mr-auto mb-2 mb-lg-0">
                 <li class="nav-item" *ngIf="isAdmin || isPartner">
-                    <a class="nav-link active" routerLink="/partner">Reclamatii<span
+                    <a class="nav-link active" routerLink="/partner">Raport reclamatii<span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item" *ngIf="isAdmin || isPartner">
+                    <a class="nav-link active" routerLink="/partner/reclamatie">Adauga reclamatie<span
                             class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item" *ngIf="isAdmin">

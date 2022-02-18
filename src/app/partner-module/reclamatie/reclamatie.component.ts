@@ -1,41 +1,39 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { switchMap, tap } from 'rxjs/operators';
+import { PreviousUrlService } from 'src/app/core/services/previous-url.service';
 import { CodeModel } from 'src/app/models/CodeModel';
+import { ComplaintModel } from 'src/app/models/ComplaintModel';
 import { Images } from 'src/app/models/Images';
 import { Ticket } from 'src/app/models/Ticket';
 import { CodesService } from '../codes.service';
+import { ComplaintService } from '../reclamatii/complaint.service';
 
 @Component({
   selector: 'app-reclamatie',
   templateUrl: './reclamatie.component.html',
   styleUrls: ['./reclamatie.component.less']
 })
-export class ReclamatieComponent implements OnInit, OnChanges, OnDestroy {
-  @Input() item: Ticket;
+export class ReclamatieComponent implements OnInit {
+  item: Ticket;
+  complaint: ComplaintModel;
 
   codeStack: CodeModel[][];
   codeStackDropdown: CodeModel[][];
   attributeStack!: [];
   private codePaths!: Map<string, string[]>;
 
-  constructor(private codesService: CodesService) {
+  constructor(private codesService: CodesService,
+    private complaintService: ComplaintService,
+    private router: Router,
+    private previousUrl: PreviousUrlService) {
     this.item = {} as Ticket;
     this.codeStackDropdown = [];
     this.codeStack = [];
-  }
+    this.item = this.router.getCurrentNavigation()?.extras.state?.ticket as Ticket ||
+      { codeLinks: [], toAddImages: [], toDeleteImages: [], images: [], id: "0" } as unknown as Ticket;
 
-  ngOnDestroy(): void {
-  }
-
-  public ngOnChanges(changes: SimpleChanges): void {
-    if (changes.item) {
-      this.item = changes.item.currentValue || {};
-      this.item.images = this.item.images ?? [];
-      this.item.toAddImages = this.item.toAddImages || [];
-      this.item.toDeleteImages = this.item.toDeleteImages || [];
-      this.item.codeLinks = this.item.codeLinks ?? [];
-      this.codePaths && this.item.codeLinks && this.initDropdownsFromItem();
-    }
+    this.complaint = this.router.getCurrentNavigation()?.extras.state?.complaint as ComplaintModel || { id: "0" };
   }
 
   public ngOnInit(): void {
@@ -51,7 +49,6 @@ export class ReclamatieComponent implements OnInit, OnChanges, OnDestroy {
 
   public delete(index: number, imageSrc: any) {
     this.item.images.splice(index, 1);
-
     if (imageSrc.id && imageSrc.id != '0')
       this.item.toDeleteImages.push({ id: imageSrc.id } as Images);
     else {
@@ -127,18 +124,23 @@ export class ReclamatieComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  public get(): Ticket {
-    this.item.id = this.item.id ?? '0';
-    return this.item;
-  }
-
   public deleteNode(codeLink: CodeModel, index: number) {
     const entryPath = this.codePaths.get(codeLink.codeValue);
-    this.item.codeLinks.splice(index, 1);
+    this.item.codeLinks.splice(this.item.codeLinks.findIndex(code => code.codeValue == codeLink.codeValue), 1);
     if (entryPath) {
-      this.setSelected(this.codeStack[entryPath.length - 1].find(t => t.id == entryPath[entryPath.length - 1])!, false);
-      this.selectItem(codeLink, entryPath.length - 1);
+      const val = this.codeStack[entryPath.length - 1].find(t => t.id == entryPath[entryPath.length - 1])!;
+      this.setSelected(val, false);
+      this.selectItem(val, entryPath.length - 1);
     }
+  }
+
+  public save() {
+    this.complaintService.save({ ...this.complaint, tickets: [{ ...this.item, images: [] }] }).pipe(
+      tap(item => {
+        Object.assign(this.complaint, item);
+        Object.assign(this.item, item.tickets[0]);
+      })
+    ).subscribe(_ => this.previousUrl.navigatePrevious());
   }
 
   public getTitle(distance: number): string {

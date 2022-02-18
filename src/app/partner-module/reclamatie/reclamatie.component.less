@@ -1,43 +1,43 @@
 :host {
-    max-width: 80vw;
 
     .delete-icon {
         margin-right: 0.5em;
     }
 
     .item {
-        margin   : 1em;
+        margin   : 0.2em;
         min-width: 30vw;
         display  : block;
     }
 
-    .fixedContainer {
-        background-color: var(--bs-body-bg);
-        position        : sticky;
-        margin-bottom   : 15px;
-        padding-bottom  : 5px;
-        left            : 50%;
-        top             : 0%;
-        z-index         : 9999;
-    }
-
-    .item-height-250 {
-        min-height: 250px;
-    }
-
-    .item-height-100 {
-        min-height: 100px;
-    }
-
     .content {
-        display        : flex;
-        align-items    : center;
-        justify-content: center;
-        min-height     : 60vh;
-        min-width      : 45vw;
+        padding       : 1em;
+        display       : flex;
+        flex-direction: column;
+        align-items   : center;
+        min-height    : 60vh;
+        min-width     : 45vw;
 
         .codesContainerInfo {
             display: inline;
+        }
+
+        .sticky-bottom {
+            position  : sticky;
+            bottom    : 1rem;
+            align-self: center;
+            transform : translate(-50%, -50%);
+            left      : 50%;
+            z-index   : 1000;
+        }
+
+        .sticky-top {
+            background-color: var(--bs-body-bg);
+            position        : sticky;
+            margin-bottom   : 15px;
+            padding-bottom  : 1em;
+            top             : 0%;
+            z-index         : 1000;
         }
     }
 }

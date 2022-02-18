@@ -2,8 +2,8 @@
 <table class="table table-striped table-hover" style="width: 100v;">
     <thead>
         <tr>
-            <th scope="col">#</th>
-            <th scope="col">
+            <th style="width: 5%;" scope="col">Nr crt.</th>
+            <th style="width: 95%;" scope="col">
                 <div class="d-flex justify-content-center">
                     <pagination-controls id="foo" (pageChange)="page = $event" (pageBoundsCorrection)="page = $event"
                         maxSize="9" directionLinks="true" autoHide="true" responsive="true" previousLabel="Previous"
@@ -12,13 +12,6 @@
                     </pagination-controls>
                 </div>
             </th>
-            <th (click)="addComplaint()" style="width: 15%;cursor: pointer;">Adauga o reclamatie
-                <fa-icon class="nav-item" icon="plus-square" [styles]="{ stroke: 'black', color: 'black' }" size="2x">
-                </fa-icon>
-            </th>
-            <!-- <th>
-                DataKey
-            </th> -->
         </tr>
     </thead>
     <tbody>
@@ -31,23 +24,17 @@
                 <table class="table table-sm">
                     <thead>
                         <tr>
-                            <th scope="col" style="width: 15%;"># Componente</th>
-                            <th scope="col" style="width: 25%;">Name</th>
-                            <th scope="col" style="width: 55%;">Description</th>
-                            <th scope="col" (click)="addTicket(item)" style="width: 15%;cursor: pointer;">Adauga
-                                <fa-icon class="nav-item" icon="plus-square"
-                                    [styles]="{ stroke: 'gray', color: 'gray' }">
-                                </fa-icon>
-                            </th>
+                            <th scope="col" style="width: 25%;">Nr. Comanda</th>
+                            <th scope="col" style="width: 60%;">Detalii</th>
+                            <th scope="col" style="width: 15%;">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr *ngFor="let ticket of item.tickets; index as i">
-                            <td style="width: 15%;" scope="row">{{i + 1}}</td>
                             <td style="width: 25%;">
-                                {{ticket.codeValue}}
+                                {{ticket.codeLinks[0]?.codeDisplay}}
                             </td>
-                            <td style="width: 55%;">{{ticket.description}}</td>
+                            <td style="width: 60%;">{{ticket.description}}</td>
                             <td *ngIf='ticket.hasImages' (click)="editTicket(item, ticket)"
                                 style="width: 15%;cursor: pointer;">
                                 <fa-icon class="nav-item" icon="paperclip" [styles]="{ stroke: 'gray', color: 'gray' }">
@@ -72,11 +59,3 @@
         </tr>
     </tbody>
 </table>
-
-<ng-template #reclamatie let-complaint let-data="data" let-done="done">
-    <app-reclamatie [item]="data.ticket" #rec>
-    </app-reclamatie>
-    <div class="form-group">
-        <button (click)="save(rec.get(), complaint, done)" class="btn btn-primary">Salveaza</button>
-    </div>
-</ng-template>
