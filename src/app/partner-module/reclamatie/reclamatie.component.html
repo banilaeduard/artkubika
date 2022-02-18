@@ -25,7 +25,7 @@
     </div>
     <div *ngIf="item?.images?.length" style="padding-bottom: 2em;">
         <div class="codesContainerInfo" *ngFor="let imageSrc of item.images; index as i">
-            <img [src]="imageSrc.data" style="max-height: 250px; max-width:250px" />
+            <img [src]="imageSrc.data" style="max-height: 250px; max-width:250px" loading="lazy" />
             <fa-icon (click)="delete(i, imageSrc)" icon="times" [styles]="{ stroke: 'black', color: 'black' }"
                 size="2x">
             </fa-icon>

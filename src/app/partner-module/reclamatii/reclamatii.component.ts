@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { PreviousUrlService } from 'src/app/core/services/previous-url.service';
 import { ComplaintModel } from 'src/app/models/ComplaintModel';
 import { PaginingModel } from 'src/app/models/PaginingModel';
@@ -15,17 +16,19 @@ export class ReclamatiiComponent implements OnInit, OnDestroy {
   complaints!: ComplaintModel[];
   public paging: PaginingModel;
 
+  private sub!: Subscription;
+
   constructor(
     private complaintService: ComplaintService,
     private previousUrlService: PreviousUrlService) {
     this.paging = PaginingModel.getNew();
   }
-
   ngOnDestroy(): void {
+    this.sub && this.sub.unsubscribe();
   }
 
   ngOnInit(): void {
-    this.previousUrlService.previousState$.subscribe(paging => {
+    this.sub = this.previousUrlService.previousState$.subscribe(paging => {
       this.paging = paging ?? PaginingModel.getNew();
       this.syncTickets();
     });
@@ -40,10 +43,6 @@ export class ReclamatiiComponent implements OnInit, OnDestroy {
       '/reclamatie',
       { ticket, complaint },
       this.paging);
-  }
-
-  pageChanged($event: any) {
-    this.page = $event;
   }
 
   public get page() {

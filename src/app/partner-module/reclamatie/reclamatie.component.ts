@@ -138,7 +138,7 @@ export class ReclamatieComponent implements OnInit {
     this.complaintService.save({ ...this.complaint, tickets: [{ ...this.item, images: [] }] }).pipe(
       tap(item => {
         Object.assign(this.complaint, item);
-        Object.assign(this.item, item.tickets[0]);
+        Object.assign(this.item, { ...item.tickets[0], toAddImages: [], toDeleteImages: [] });
       })
     ).subscribe(_ => this.previousUrl.navigatePrevious());
   }

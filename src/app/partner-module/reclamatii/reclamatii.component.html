@@ -1,4 +1,3 @@
-# Reclamatii
 <table class="table table-striped table-hover" style="width: 100v;">
     <thead>
         <tr>
@@ -19,14 +18,15 @@
                                                       itemsPerPage: paging.pageSize,
                                                       currentPage: page,
                                                       totalItems: paging.collectionSize }; index as i">
-            <td style="width: 5%; border-right: solid;" scope="row">{{i + 1}}</td>
+            <td style="width: 5%; border-right: solid; border-width: thin;align-content: center;" scope="row">{{i + 1}}
+            </td>
             <td>
                 <table class="table table-sm">
                     <thead>
                         <tr>
-                            <th scope="col" style="width: 25%;">Nr. Comanda</th>
+                            <th scope="col" style="width: 25%;">Nr.</th>
                             <th scope="col" style="width: 60%;">Detalii</th>
-                            <th scope="col" style="width: 15%;">Actions</th>
+                            <th scope="col" style="width: 15%;"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -35,14 +35,10 @@
                                 {{ticket.codeLinks[0]?.codeDisplay}}
                             </td>
                             <td style="width: 60%;">{{ticket.description}}</td>
-                            <td *ngIf='ticket.hasImages' (click)="editTicket(item, ticket)"
-                                style="width: 15%;cursor: pointer;">
-                                <fa-icon class="nav-item" icon="paperclip" [styles]="{ stroke: 'gray', color: 'gray' }">
+                            <td (click)="editTicket(item, ticket)" style="width: 15%;cursor: pointer;">
+                                <fa-icon *ngIf="ticket.hasImages" class="nav-item" icon="paperclip"
+                                    style="margin-right:5px" [styles]="{ stroke: 'gray', color: 'gray' }">
                                 </fa-icon>
-                                Imagini atasate
-                            </td>
-                            <td *ngIf='!ticket.hasImages' (click)="editTicket(item, ticket)"
-                                style="width: 15%;cursor: pointer;">
                                 <fa-icon class="nav-item" icon="edit" [styles]="{ stroke: 'gray', color: 'gray' }">
                                 </fa-icon>
                                 Edit
