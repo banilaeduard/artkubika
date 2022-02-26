@@ -105,11 +105,7 @@ export class ReclamatieComponent implements OnInit {
           this.codeStackDropdown[depth + 1] = this.codeStackDropdown[depth + 1] || [];
           if (this.isSelected(node) && this.codeStack[depth].findIndex(it => it.id == node.id) < 0) {
             this.codeStack[depth].push(node);
-            node.children?.forEach(child => {
-              this.codeStackDropdown[depth + 1].push(child);
-              child.parent = node;
-              child.groupBy = `${!!node?.groupBy ? (node.groupBy + ', ') : ''}${node.codeDisplay}`
-            });
+            node.children?.forEach(child => this.codeStackDropdown[depth + 1].push(child));
           }
 
           if (this.isSelected(node)) {
