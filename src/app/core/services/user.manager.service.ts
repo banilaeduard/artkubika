@@ -16,7 +16,7 @@ export class UserManagerService {
       Phone: user.phone,
       Password: password,
       Address: user.address,
-      Birth: user.birth
+      DataKey: user.dataKey
     });
   }
 

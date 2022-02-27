@@ -46,7 +46,6 @@ export class UserEditComponent implements OnDestroy {
       this.userContextService.update(
         user.name,
         user.phone,
-        user.birth,
         user.address
       );
     } else {

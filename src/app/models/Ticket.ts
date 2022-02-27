@@ -10,4 +10,5 @@ export interface Ticket {
     toAddImages: Images[];
     toDeleteImages: Images[];
     hasImages: boolean;
+    created: Date;
 }

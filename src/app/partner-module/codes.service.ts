@@ -35,7 +35,7 @@ export class CodesService {
       depth > 0 && codePaths.get(node.id)?.push(node.id);
       return !!node.children;
     },
-      (node, depth) => node.children!, 0);
+      (node, _) => node.children!, 0);
 
     return of(codePaths);
   }

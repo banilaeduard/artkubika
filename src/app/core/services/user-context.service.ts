@@ -48,10 +48,9 @@ export class UserContextService {
       , {}).pipe(map(item => item.token));
   }
 
-  public update(name: string, phone: string, birthday: Date, address: string): void {
+  public update(name: string, phone: string, address: string): void {
     this.CurrentUser.name = name;
     this.CurrentUser.address = address;
-    this.CurrentUser.birth = birthday;
     this.CurrentUser.phone = phone;
     this.userManagerService.updateUser(this.CurrentUser)
       .pipe(

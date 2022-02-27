@@ -50,7 +50,7 @@ export class ReclamatieComponent implements OnInit {
   public delete(index: number, imageSrc: any) {
     this.item.images.splice(index, 1);
     if (imageSrc.id && imageSrc.id != '0')
-      this.item.toDeleteImages.push({ id: imageSrc.id } as Images);
+      this.item.toDeleteImages.push(imageSrc);
     else {
       this.item.toAddImages.splice(this.item.toAddImages.findIndex(t => t.title == imageSrc.title));
     }

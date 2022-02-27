@@ -1,5 +1,8 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { UserContextService } from 'src/app/core/services/user-context.service';
 import { UserModel } from 'src/app/models/UserModel';
 
 @Component({
@@ -7,16 +10,23 @@ import { UserModel } from 'src/app/models/UserModel';
   templateUrl: './user-details.component.html',
   styleUrls: ['./user-details.component.less']
 })
-export class UserDetailsComponent implements OnInit, OnChanges {
+export class UserDetailsComponent implements OnInit, OnChanges, OnDestroy {
   @Input() userModel!: UserModel;
   @Input() showPassword: boolean = true;
   @Output() message: EventEmitter<any> = new EventEmitter();
 
   public userForm!: FormGroup;
+  public isAdmin!: boolean;
+  private sub!: Subscription;
 
   constructor(
+    private userContextService: UserContextService,
     private formBuilder: FormBuilder) {
   }
+  ngOnDestroy(): void {
+    this.sub && this.sub.unsubscribe();
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.userModel) {
       this.initUserForm();
@@ -24,7 +34,12 @@ export class UserDetailsComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    this.initUserForm();
+    this.sub = this.userContextService.CurrentUser$.pipe(
+      switchMap(_ => this.userContextService.isInRole(['admin']))
+    ).subscribe(t => {
+      this.isAdmin = t;
+      this.initUserForm();
+    });
   }
 
   get f() { return this.userForm.controls; }
@@ -48,6 +63,7 @@ export class UserDetailsComponent implements OnInit, OnChanges {
         email: this.f["email"].value,
         name: this.f["name"].value,
         userName: this.f["email"].value,
+        dataKey: this.f["dataKey"].value,
       } as UserModel,
       password: this.f['password'].value
     });
@@ -75,7 +91,8 @@ export class UserDetailsComponent implements OnInit, OnChanges {
       name: [this.userModel.name],
       email: [this.userModel.email, [Validators.email, Validators.required]],
       phone: [this.userModel.phone, [Validators.required]],
-      address: [this.userModel.address, [Validators.required]]
+      address: [this.userModel.address, [Validators.required]],
+      dataKey: [this.userModel.dataKey]
     }, { validators: this.checkPasswords });
 
     this.userForm.reset(this.userForm.value);

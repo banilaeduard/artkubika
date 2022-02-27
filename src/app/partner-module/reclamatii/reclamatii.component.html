@@ -1,8 +1,8 @@
 <table class="table table-striped table-hover" style="width: 100v;">
     <thead>
         <tr>
-            <th style="width: 5%;" scope="col">Nr crt.</th>
-            <th style="width: 95%;" scope="col">
+            <th style="width: 3%;" scope="col">#</th>
+            <th scope="col">
                 <div class="d-flex justify-content-center">
                     <pagination-controls id="foo" (pageChange)="page = $event" (pageBoundsCorrection)="page = $event"
                         maxSize="9" directionLinks="true" autoHide="true" responsive="true" previousLabel="Previous"
@@ -11,6 +11,8 @@
                     </pagination-controls>
                 </div>
             </th>
+            <th style="width: 10%;">Data</th>
+            <th style="width: 10%;" *ngIf="isAdmin">Client</th>
         </tr>
     </thead>
     <tbody>
@@ -18,7 +20,7 @@
                                                       itemsPerPage: paging.pageSize,
                                                       currentPage: page,
                                                       totalItems: paging.collectionSize }; index as i">
-            <td style="width: 5%; border-right: solid; border-width: thin;align-content: center;" scope="row">{{i + 1}}
+            <td style="width: 3%; border-right: solid; border-width: thin;align-content: center;" scope="row">{{i + 1}}
             </td>
             <td>
                 <table class="table table-sm">
@@ -48,10 +50,10 @@
                 </table>
             </td>
 
-            <!-- <td style="width: 15%;">
-                {{item?.dataKey}}
-            </td> -->
-
+            <td style="width: 15%;">
+                {{item?.created | date: 'MMM d, Y, h:mm a'}}
+            </td>
+            <td style="width: 15%;" *ngIf="isAdmin">{{item?.dataKey ?? 'admin'}}</td>
         </tr>
     </tbody>
 </table>
