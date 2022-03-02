@@ -17,6 +17,7 @@ import { ComplaintService } from '../reclamatii/complaint.service';
 export class ReclamatieComponent implements OnInit {
   item: Ticket;
   complaint: ComplaintModel;
+  isHtml: boolean;
 
   codeStack: CodeModel[][];
   codeStackDropdown: CodeModel[][];
@@ -34,6 +35,7 @@ export class ReclamatieComponent implements OnInit {
       { codeLinks: [], toAddImages: [], toDeleteImages: [], images: [], id: "0" } as unknown as Ticket;
 
     this.complaint = this.router.getCurrentNavigation()?.extras.state?.complaint as ComplaintModel || { id: "0" };
+    this.isHtml = this.item.codeValue?.indexOf("html") > -1;
   }
 
   public ngOnInit(): void {

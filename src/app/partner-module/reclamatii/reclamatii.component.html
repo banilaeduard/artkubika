@@ -36,7 +36,10 @@
                             <td style="width: 25%;">
                                 {{ticket.codeLinks[0]?.codeDisplay}}
                             </td>
-                            <td style="width: 60%;">{{ticket.description}}</td>
+
+                            <td style="width: 60%;">
+                                <div style="max-height: 50vh;" [innerHTML]="ticket.description"></div>
+                            </td>
                             <td (click)="editTicket(item, ticket)" style="width: 15%;cursor: pointer;">
                                 <fa-icon *ngIf="ticket.hasImages" class="nav-item" icon="paperclip"
                                     style="margin-right:5px" [styles]="{ stroke: 'gray', color: 'gray' }">
