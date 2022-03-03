@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { ComplaintModel } from 'src/app/models/ComplaintModel';
 import { PaginingModel } from 'src/app/models/PaginingModel';
-import { Ticket } from 'src/app/models/Ticket';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +21,14 @@ export class ComplaintService {
   }
 
   public save(complaint: ComplaintModel): Observable<ComplaintModel> {
-    return this.http.post<ComplaintModel>('ticket', complaint)
+    return this.http.post<ComplaintModel>('ticket', complaint);
+  }
+
+  public delete(complaint: ComplaintModel): Observable<ComplaintModel> {
+    return this.http.post<ComplaintModel>('ticket/delete', complaint);
+  }
+
+  public updateStatus(complaint: ComplaintModel, status: string): Observable<ComplaintModel> {
+    return this.http.post<ComplaintModel>(`ticket/status/${status}`, complaint);
   }
 }

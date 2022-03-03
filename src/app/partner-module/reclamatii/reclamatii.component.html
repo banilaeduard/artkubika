@@ -28,17 +28,26 @@
                         <tr>
                             <th scope="col" style="width: 25%;">Nr.</th>
                             <th scope="col" style="width: 60%;">Detalii</th>
-                            <th scope="col" style="width: 15%;"></th>
+                            <th scope="col" style="width: 15%;" class="icon-stack">
+                                <fa-icon (click)="delete(item)" icon="trash-alt"
+                                    [styles]="{ stroke: 'black', color: 'black' }" size="1x"></fa-icon>
+                                <fa-icon *ngIf="item.status != 'ACCEPTED'" (click)="updateStatusAccepted(item)"
+                                    icon="calendar-check" [styles]="{ stroke: 'green', color: 'green' }" size="1x">
+                                </fa-icon>
+                                <fa-icon *ngIf="item.status != 'REJECTED'" (click)="updateStatusRejected(item)"
+                                    icon="calendar-minus" [styles]="{ stroke: 'red', color: 'red' }" size="1x">
+                                </fa-icon>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr *ngFor="let ticket of item.tickets; index as i">
                             <td style="width: 25%;">
-                                {{ticket.codeLinks[0]?.codeDisplay}}
+                                {{item.status}}
                             </td>
 
                             <td style="width: 60%;">
-                                <div style="max-height: 50vh;" [innerHTML]="ticket.description"></div>
+                                <div style="max-height: 45vh;" [innerHTML]="ticket.description"></div>
                             </td>
                             <td (click)="editTicket(item, ticket)" style="width: 15%;cursor: pointer;">
                                 <fa-icon *ngIf="ticket.hasImages" class="nav-item" icon="paperclip"

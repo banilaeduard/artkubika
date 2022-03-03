@@ -55,6 +55,26 @@ export class ReclamatiiComponent implements OnInit, OnDestroy {
       this.paging);
   }
 
+  public delete(complaint: ComplaintModel) {
+    if (confirm("Are you sure you want to delete the entry?")) {
+      this.complaintService
+        .delete(complaint)
+        .subscribe(_ => this.syncTickets());
+    }
+  }
+
+  public updateStatusAccepted(complaint: ComplaintModel) {
+    this.complaintService
+      .updateStatus(complaint, 'ACCEPTED')
+      .subscribe(_complaint => Object.assign(complaint, _complaint));
+  }
+
+  public updateStatusRejected(complaint: ComplaintModel) {
+    this.complaintService
+      .updateStatus(complaint, 'REJECTED')
+      .subscribe(_complaint => Object.assign(complaint, _complaint));
+  }
+
   public get page() {
     return this.paging.page;
   }
