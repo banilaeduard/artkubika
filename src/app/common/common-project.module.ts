@@ -8,6 +8,7 @@ import { UserDetailsComponent } from './user-details/user-details.component';
 import { DropdownComponent } from './dropdown/dropdown.component';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { NgScrollbarModule } from 'ngx-scrollbar';
+import { SafePipe } from './safe.pipe';
 
 @NgModule({
     imports: [
@@ -18,10 +19,9 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
         ReactiveFormsModule,
         NgScrollbarModule,
         BsDropdownModule,
-
     ],
-    exports: [OverlaymenuComponent, UserDetailsComponent, DropdownComponent],
-    declarations: [OverlaymenuComponent, UserDetailsComponent, DropdownComponent]
+    exports: [OverlaymenuComponent, UserDetailsComponent, DropdownComponent, SafePipe],
+    declarations: [OverlaymenuComponent, UserDetailsComponent, DropdownComponent, SafePipe]
 })
 export class CommonProjectModule {
 }

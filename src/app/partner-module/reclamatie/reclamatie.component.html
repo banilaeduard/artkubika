@@ -19,7 +19,8 @@
     <textarea maxlength="500" *ngIf="!isHtml" class="item" placeholder="Descriere" type="textarea"
         [(ngModel)]="item.description"></textarea>
 
-    <div style="max-height: 60vh;overflow-y: scroll;" *ngIf="isHtml" [innerHTML]="item.description"></div>
+    <div style="max-height: 60vh;overflow-y: scroll;" *ngIf="isHtml" [innerHTML]="item.description | safe : 'html'">
+    </div>
 
     <div class="sticky-top">
         <label for="file">Adaugati imagini cu coletele cu probleme</label>
