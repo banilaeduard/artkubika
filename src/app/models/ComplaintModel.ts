@@ -5,4 +5,5 @@ export interface ComplaintModel {
     tickets: Ticket[];
     created: Date;
     dataKey: string;
+    status: string;
 }
