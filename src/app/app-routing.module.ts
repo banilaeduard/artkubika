@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './auth.guard';
+import { FramwrapperComponent } from './common/framwrapper/framwrapper.component';
 // import { CartListItemsComponent } from './cart-list-items/cart-list-items.component';
 import { ConfirmationEmailComponent } from './core/confirmation-email/confirmation-email.component';
 import { LoginComponent } from './core/login/login.component';
@@ -27,6 +28,12 @@ const routes: Routes = [
     path: 'partner',
     loadChildren: () => import('./partner-module/partner.module').then(m => m.PartnerModule),
     data: { roles: ['partener', 'admin'] },
+    canLoad: [AuthGuard],
+  },
+  {
+    path: 'calendar',
+    component: FramwrapperComponent,
+    data: { roles: ['admin'], url: 'https://calendar.google.com/calendar/embed?src=reclamatii%40tehn.org&ctz=Europe%2FLondon' },
     canLoad: [AuthGuard],
   }
 ];

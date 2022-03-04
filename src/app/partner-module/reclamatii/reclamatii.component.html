@@ -29,11 +29,13 @@
                             <th scope="col" style="width: 15%;" class="icon-stack">
                                 <fa-icon (click)="delete(item)" icon="trash-alt"
                                     [styles]="{ stroke: 'black', color: 'black' }" size="1x"></fa-icon>
-                                <fa-icon *ngIf="item.status != 'ACCEPTED'" (click)="updateStatusAccepted(item)"
-                                    icon="calendar-check" [styles]="{ stroke: 'green', color: 'green' }" size="1x">
+                                <fa-icon *ngIf="isAdmin && item.status != 'ACCEPTED'"
+                                    (click)="updateStatusAccepted(item)" icon="calendar-check"
+                                    [styles]="{ stroke: 'green', color: 'green' }" size="1x">
                                 </fa-icon>
-                                <fa-icon *ngIf="item.status != 'REJECTED'" (click)="updateStatusRejected(item)"
-                                    icon="calendar-minus" [styles]="{ stroke: 'red', color: 'red' }" size="1x">
+                                <fa-icon *ngIf="isAdmin && item.status != 'REJECTED'"
+                                    (click)="updateStatusRejected(item)" icon="calendar-minus"
+                                    [styles]="{ stroke: 'red', color: 'red' }" size="1x">
                                 </fa-icon>
                             </th>
                         </tr>

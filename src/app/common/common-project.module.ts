@@ -9,6 +9,7 @@ import { DropdownComponent } from './dropdown/dropdown.component';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { SafePipe } from './safe.pipe';
+import { FramwrapperComponent } from './framwrapper/framwrapper.component';
 
 @NgModule({
     imports: [
@@ -20,8 +21,8 @@ import { SafePipe } from './safe.pipe';
         NgScrollbarModule,
         BsDropdownModule,
     ],
-    exports: [OverlaymenuComponent, UserDetailsComponent, DropdownComponent, SafePipe],
-    declarations: [OverlaymenuComponent, UserDetailsComponent, DropdownComponent, SafePipe]
+    exports: [OverlaymenuComponent, UserDetailsComponent, DropdownComponent, SafePipe, FramwrapperComponent],
+    declarations: [OverlaymenuComponent, UserDetailsComponent, DropdownComponent, SafePipe, FramwrapperComponent]
 })
 export class CommonProjectModule {
 }
