@@ -26,10 +26,15 @@
         <label for="file">Adaugati imagini cu coletele cu probleme</label>
         <input id="file" multiple type="file" class="form-control" (change)="onFileChange($event)">
     </div>
-    <div *ngIf="item?.images?.length" style="padding-bottom: 2em;">
-        <div class="codesContainerInfo" *ngFor="let imageSrc of item.images; index as i">
-            <img [src]="imageSrc.data" style="max-height: 250px; max-width:250px" loading="lazy" />
-            <fa-icon (click)="delete(i, imageSrc)" icon="times" [styles]="{ stroke: 'black', color: 'black' }"
+    <div *ngIf="item?.attachments?.length" style="padding-bottom: 2em;">
+        <div class="codesContainerInfo" *ngFor="let attachment of item.attachments; index as i">
+            <app-framwrapper *ngIf="!attachment.contentType?.includes('image')"
+                style="max-height: 250px; max-width:250px" [src]="attachment.data">
+            </app-framwrapper>
+            <a *ngIf="attachment.contentType?.includes('image')" [href]="attachment.data" target="_blank">
+                <img [src]="attachment.data" style="max-height: 250px; max-width:250px" loading="lazy" />
+            </a>
+            <fa-icon (click)="delete(i, attachment)" icon="times" [styles]="{ stroke: 'black', color: 'black' }"
                 size="2x">
             </fa-icon>
         </div>

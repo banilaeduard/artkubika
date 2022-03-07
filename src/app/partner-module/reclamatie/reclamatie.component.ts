@@ -2,9 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { switchMap, tap } from 'rxjs/operators';
 import { PreviousUrlService } from 'src/app/core/services/previous-url.service';
+import { Attachment } from 'src/app/models/Attachment';
 import { CodeModel } from 'src/app/models/CodeModel';
 import { ComplaintModel } from 'src/app/models/ComplaintModel';
-import { Images } from 'src/app/models/Images';
 import { Ticket } from 'src/app/models/Ticket';
 import { CodesService } from '../codes.service';
 import { ComplaintService } from '../reclamatii/complaint.service';
@@ -32,10 +32,11 @@ export class ReclamatieComponent implements OnInit {
     this.codeStackDropdown = [];
     this.codeStack = [];
     this.item = this.router.getCurrentNavigation()?.extras.state?.ticket as Ticket ||
-      { codeLinks: [], toAddImages: [], toDeleteImages: [], images: [], id: "0" } as unknown as Ticket;
+      { codeLinks: [], toAddAttachment: [], toDeleteAttachment: [], attachments: [], id: "0" } as unknown as Ticket;
 
     this.complaint = this.router.getCurrentNavigation()?.extras.state?.complaint as ComplaintModel || { id: "0" };
     this.isHtml = this.item.codeValue?.indexOf("html") > -1;
+    console.log(this.item);
   }
 
   public ngOnInit(): void {
@@ -50,11 +51,11 @@ export class ReclamatieComponent implements OnInit {
   }
 
   public delete(index: number, imageSrc: any) {
-    this.item.images.splice(index, 1);
+    this.item.attachments.splice(index, 1);
     if (imageSrc.id && imageSrc.id != '0')
-      this.item.toDeleteImages.push(imageSrc);
+      this.item.toDeleteAttachment.push(imageSrc);
     else {
-      this.item.toAddImages.splice(this.item.toAddImages.findIndex(t => t.title == imageSrc.title));
+      this.item.toAddAttachment.splice(this.item.toAddAttachment.findIndex(t => t.title == imageSrc.title));
     }
   }
 
@@ -62,12 +63,13 @@ export class ReclamatieComponent implements OnInit {
     if (event.target.files && event.target.files.length) {
       for (const file of event.target.files) {
         const reader = new FileReader();
+        console.log(file);
         reader.readAsDataURL(file);
         reader.onload = () => {
           const dataImage = reader.result as string;
           const base64 = dataImage.substring(dataImage.indexOf("base64,") + "base64,".length, dataImage.length);
-          this.item.toAddImages.push({ data: base64, title: file.name, id: '0' });
-          this.item.images.push({ data: reader.result as string, title: file.name, id: '0' });
+          this.item.toAddAttachment.push({ data: base64, title: file.name, id: '0', contentType: file.type } as Attachment);
+          this.item.attachments.push({ data: reader.result as string, title: file.name, id: '0', contentType: file.type } as Attachment);
         };
       }
     }
@@ -133,7 +135,7 @@ export class ReclamatieComponent implements OnInit {
   }
 
   public save() {
-    this.complaintService.save({ ...this.complaint, tickets: [{ ...this.item, images: [] }] }).pipe(
+    this.complaintService.save({ ...this.complaint, tickets: [{ ...this.item, attachments: [] }] }).pipe(
       tap(item => {
         Object.assign(this.complaint, item);
         Object.assign(this.item, { ...item.tickets[0], toAddImages: [], toDeleteImages: [] });

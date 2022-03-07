@@ -46,9 +46,9 @@ export class ReclamatiiComponent implements OnInit, OnDestroy {
 
   editTicket(complaint: ComplaintModel, ticket: Ticket) {
     ticket.codeLinks = ticket.codeLinks ?? [];
-    ticket.toAddImages = ticket.toAddImages ?? [];
-    ticket.toDeleteImages = ticket.toDeleteImages ?? [];
-    ticket.images = ticket.images ?? [];
+    ticket.toAddAttachment = ticket.toAddAttachment ?? [];
+    ticket.toDeleteAttachment = ticket.toDeleteAttachment ?? [];
+    ticket.attachments = ticket.attachments ?? [];
     this.previousUrlService.navigateForPrevious(
       '/reclamatie',
       { ticket, complaint },

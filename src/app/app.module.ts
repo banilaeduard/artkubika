@@ -10,7 +10,6 @@ import { HomeComponent } from './home/home.component';
 
 import { FaIconLibrary, FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';
-// import { CartListItemsComponent } from './cart-list-items/cart-list-items.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { environment } from 'src/environments/environment';
@@ -19,11 +18,6 @@ import { LoginComponent } from './core/login/login.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { JwtTokenInterceptor } from './core/http/JwtTokenInterceptor';
 import { ConfirmationEmailComponent } from './core/confirmation-email/confirmation-email.component';
-// import { SocialLoginModule, SocialAuthServiceConfig } from 'angularx-social-login';
-// import {
-//   GoogleLoginProvider,
-//   FacebookLoginProvider
-// } from 'angularx-social-login';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { ResetPasswordComponent } from './core/reset-password/reset-password.component';
@@ -73,7 +67,6 @@ import { PartnerModule } from './partner-module/partner.module';
     NgxNavbarModule,
     ClipboardModule,
     PortalModule,
-    // user defined modules
     CommonProjectModule,
     AdminModule,
     PartnerModule
@@ -141,7 +134,5 @@ String.prototype.getUniqueId = () => {
   }
   return stringArr.join('-');
 };
-
-console.log("".hashCode());
 
 export { }

@@ -46,7 +46,7 @@
                                 <div style="max-height: 45vh;" [innerHTML]="ticket.description | safe: 'html'"></div>
                             </td>
                             <td (click)="editTicket(item, ticket)" style="width: 15%;cursor: pointer;">
-                                <fa-icon *ngIf="ticket.hasImages" class="nav-item" icon="paperclip"
+                                <fa-icon *ngIf="ticket.hasAttachments" class="nav-item" icon="paperclip"
                                     style="margin-right:5px" [styles]="{ stroke: 'gray', color: 'gray' }">
                                 </fa-icon>
                                 <fa-icon class="nav-item" icon="edit" [styles]="{ stroke: 'gray', color: 'gray' }">

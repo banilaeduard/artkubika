@@ -14,7 +14,6 @@ const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'user', component: UserEditComponent },
   { path: 'register', component: UserRegistrationComponent },
-  //{ path: 'cartitems', component: CartListItemsComponent },
   { path: 'login', component: LoginComponent },
   { path: 'confirmationEmail', component: ConfirmationEmailComponent },
   { path: 'resetPassword', component: ResetPasswordComponent },

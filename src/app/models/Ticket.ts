@@ -1,14 +1,14 @@
 import { CodeModel } from "./CodeModel";
-import { Images } from "./Images";
+import { Attachment } from "./Attachment";
 
 export interface Ticket {
     codeLinks: CodeModel[];
     codeValue: string;
     description: string;
     id: string;
-    images: Images[];
-    toAddImages: Images[];
-    toDeleteImages: Images[];
-    hasImages: boolean;
+    attachments: Attachment[];
+    toAddAttachment: Attachment[];
+    toDeleteAttachment: Attachment[];
+    hasAttachments: boolean;
     created: Date;
 }
