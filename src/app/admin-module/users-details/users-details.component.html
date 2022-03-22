@@ -9,7 +9,7 @@
             <th scope="col">Username</th>
             <th scope="col">Email</th>
             <th scope="col">Phone</th>
-            <th scope="col">Address</th>
+            <th scope="col">Location code</th>
             <th scope="col">
                 <fa-icon (click)="addUser()" class="nav-item" icon="plus-square"
                     [styles]="{ stroke: 'black', color: 'black' }" size="2x">
@@ -26,7 +26,7 @@
             <td>{{user.userName}}</td>
             <td>{{user.email}}</td>
             <td>{{user.phone}}</td>
-            <td>{{user.address}}</td>
+            <td>{{user.dataKey}}</td>
             <td *ngIf="user.userName !== 'admin'">
                 <fa-icon (click)="editUser(user)" icon="edit" [styles]="{ stroke: 'black', color: 'black' }" size="1x">
                 </fa-icon>
