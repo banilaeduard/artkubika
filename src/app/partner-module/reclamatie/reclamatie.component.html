@@ -16,7 +16,7 @@
     <div>Selectati un colet cu probleme</div>
     <ng-container *ngTemplateOutlet="treeView; context:{distance: 0} ">
     </ng-container>
-    <textarea maxlength="500" *ngIf="!isHtml" class="item" placeholder="Descriere" type="textarea"
+    <textarea maxlength="1000" *ngIf="!isHtml" class="item area" placeholder="Descriere" type="textarea"
         [(ngModel)]="item.description"></textarea>
 
     <div style="max-height: 60vh;overflow-y: scroll;" *ngIf="isHtml" [innerHTML]="item.description | safe : 'html'">

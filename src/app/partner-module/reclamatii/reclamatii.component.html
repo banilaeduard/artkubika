@@ -20,7 +20,7 @@
                                                       itemsPerPage: paging.pageSize,
                                                       currentPage: page,
                                                       totalItems: paging.collectionSize }; index as i">
-            <td style="width: 10%;">{{item.status}}</td>
+            <td style="width: 10%;">{{item.status ?? 'x'}} - {{item.nrComanda ?? 'x'}}</td>
             <td>
                 <table class="table table-sm">
                     <thead>

@@ -6,4 +6,5 @@ export interface ComplaintModel {
     created: Date;
     dataKey: string;
     status: string;
+    nrComanda: string;
 }
