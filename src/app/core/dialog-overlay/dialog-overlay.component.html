@@ -5,7 +5,9 @@
         </fa-icon>
         <h4 style="margin-left:1em;">{{context.data?.header}}</h4>
     </div>
-    <div class="modal-body">
-        <ng-container *cdkPortalOutlet></ng-container>
-    </div>
+    <ng-scrollbar id="scrollbar" [track]="'vertical'" [visibility]="'always'">
+        <div class="modal-body">
+            <ng-container *cdkPortalOutlet></ng-container>
+        </div>
+    </ng-scrollbar>
 </div>

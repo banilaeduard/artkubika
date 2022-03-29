@@ -9,6 +9,7 @@ import { dropdown } from 'src/app/models/dropdown';
 export class DropdownComponent implements OnInit, DoCheck {
   @Input() items!: dropdown[];
   @Input() title!: string;
+  @Input() multiSelect: boolean = true;
   @Output() itemClicked: EventEmitter<any> = new EventEmitter<any>();
 
   iterableDiffer: IterableDiffer<any>;
@@ -52,10 +53,17 @@ export class DropdownComponent implements OnInit, DoCheck {
 
   private match(item: dropdown): boolean {
     return item.display.toLocaleLowerCase().indexOf(this.searchValue.toLocaleLowerCase()) !== -1
-      || item.groupBy.toLocaleLowerCase().indexOf(this.searchValue.toLocaleLowerCase()) !== -1;
+      || item.groupBy?.toLocaleLowerCase().indexOf(this.searchValue.toLocaleLowerCase()) !== -1;
   }
 
   public clicked = (item: { displayItem: dropdown, visible: boolean }) => {
+    if (!this.multiSelect) {
+      this.items.forEach(element => {
+        if (element.id !== item.displayItem.id) {
+          element.selected = false;
+        }
+      });
+    }
     if (!this.title) {
       this.title = this.filteredItems.find(t => t == item)?.displayItem.display;
     }

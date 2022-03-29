@@ -10,6 +10,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { SafePipe } from './safe.pipe';
 import { FramwrapperComponent } from './framwrapper/framwrapper.component';
+import { SearchFilterComponent } from './search-filter/search-filter.component';
 
 @NgModule({
     imports: [
@@ -21,8 +22,8 @@ import { FramwrapperComponent } from './framwrapper/framwrapper.component';
         NgScrollbarModule,
         BsDropdownModule,
     ],
-    exports: [OverlaymenuComponent, UserDetailsComponent, DropdownComponent, SafePipe, FramwrapperComponent],
-    declarations: [OverlaymenuComponent, UserDetailsComponent, DropdownComponent, SafePipe, FramwrapperComponent]
+    exports: [OverlaymenuComponent, UserDetailsComponent, DropdownComponent, SafePipe, FramwrapperComponent, SearchFilterComponent],
+    declarations: [OverlaymenuComponent, UserDetailsComponent, DropdownComponent, SafePipe, FramwrapperComponent, SearchFilterComponent]
 })
 export class CommonProjectModule {
 }

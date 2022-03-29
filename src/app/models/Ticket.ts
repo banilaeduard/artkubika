@@ -11,4 +11,5 @@ export interface Ticket {
     toDeleteAttachment: Attachment[];
     hasAttachments: boolean;
     created: Date;
+    tags: any;
 }

@@ -1,5 +1,9 @@
 <div class="content">
-    <div *ngIf="item.codeLinks.length > 0" class="codesContainerInfo">
+    <div class="form-group">
+        <label for="nrComanda">Nr. Comanda</label>
+        <input required type="text" class="form-control" [(ngModel)]="complaint.nrComanda" name='nrComanda' />
+    </div>
+    <div *ngIf=" item.codeLinks.length> 0" class="codesContainerInfo">
         <button *ngFor="let code of item.codeLinks; index as i;" type="button"
             class="btn btn-light btn-outline-secondary" (click)="deleteNode(code, i)">
             <span class="btn-label">
@@ -18,6 +22,9 @@
     </ng-container>
     <textarea maxlength="1000" *ngIf="!isHtml" class="item area" placeholder="Descriere" type="textarea"
         [(ngModel)]="item.description"></textarea>
+
+    <textarea maxlength="1000" *ngIf="!!jsonTags" class="item area" placeholder="JSON TAGS" type="textarea"
+        [(ngModel)]="jsonTags"></textarea>
 
     <div style="max-height: 60vh;overflow-y: scroll;" *ngIf="isHtml" [innerHTML]="item.description | safe : 'html'">
     </div>
@@ -40,7 +47,7 @@
         </div>
     </div>
     <div class="sticky-bottom">
-        <button (click)="save()" class="btn btn-primary">Salveaza</button>
+        <button type="submit" (click)="save()" class="btn btn-primary">Salveaza</button>
     </div>
 
     <ng-template #treeView let-distance="distance">

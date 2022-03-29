@@ -15,6 +15,7 @@ export class ComplaintService {
   public getAll(pagingModel: PaginingModel): Observable<ComplaintModel[]> {
     return this.http.get<{ count: number, complaints: ComplaintModel[] }>(`ticket/${pagingModel.page}/${pagingModel.pageSize}`)
       .pipe(
+        // tap(console.log),
         tap(col => pagingModel.collectionSize = col.count),
         map(col => col.complaints)
       );

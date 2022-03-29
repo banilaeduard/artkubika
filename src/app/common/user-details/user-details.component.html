@@ -48,7 +48,7 @@
         </div>
         <label for="dataKey">Cod Locatie</label>
         <input type="text" formControlName="dataKey" [readonly]="!isAdmin" class="form-control"
-            [ngClass]="{ 'is-invalid': f.phone.errors }" />
+            [ngClass]="{ 'is-invalid': f.dataKey.errors }" />
     </div>
     <div class="form-group">
         <div *ngIf="f.address.errors" class="invalid-feedback">

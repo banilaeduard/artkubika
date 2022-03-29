@@ -16,6 +16,7 @@ import { ComplaintService } from '../reclamatii/complaint.service';
 })
 export class ReclamatieComponent implements OnInit {
   item: Ticket;
+  jsonTags!: string;
   complaint: ComplaintModel;
   isHtml: boolean;
 
@@ -36,7 +37,7 @@ export class ReclamatieComponent implements OnInit {
 
     this.complaint = this.router.getCurrentNavigation()?.extras.state?.complaint as ComplaintModel || { id: "0" };
     this.isHtml = this.item.codeValue?.indexOf("html") > -1;
-    console.log(this.item);
+    !!this.item.tags && (this.jsonTags = JSON.stringify(this.item.tags, null, " "));
   }
 
   public ngOnInit(): void {
@@ -63,7 +64,6 @@ export class ReclamatieComponent implements OnInit {
     if (event.target.files && event.target.files.length) {
       for (const file of event.target.files) {
         const reader = new FileReader();
-        console.log(file);
         reader.readAsDataURL(file);
         reader.onload = () => {
           const dataImage = reader.result as string;
@@ -135,7 +135,7 @@ export class ReclamatieComponent implements OnInit {
   }
 
   public save() {
-    this.complaintService.save({ ...this.complaint, tickets: [{ ...this.item, attachments: [] }] }).pipe(
+    this.complaintService.save({ ...this.complaint, tickets: [{ ...this.item, attachments: [], tags: !!this.jsonTags ? JSON.parse(this.jsonTags) : undefined }] }).pipe(
       tap(item => {
         Object.assign(this.complaint, item);
         Object.assign(this.item, { ...item.tickets[0], toAddImages: [], toDeleteImages: [] });
