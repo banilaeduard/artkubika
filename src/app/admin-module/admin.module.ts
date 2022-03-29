@@ -11,6 +11,7 @@ import { ManageCodesComponent } from './manage-codes/manage-codes.component';
 import { FormsModule } from '@angular/forms';
 import { ManageAttributesComponent } from './manage-attributes/manage-attributes.component';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { ManageFiltersComponent } from './manage-filters/manage-filters.component';
 
 const routes: Routes = [
     {
@@ -24,6 +25,10 @@ const routes: Routes = [
     {
         path: 'manageattributes',
         component: ManageAttributesComponent
+    },
+    {
+        path: 'managefilters',
+        component: ManageFiltersComponent
     }
 ];
 
@@ -38,7 +43,7 @@ const routes: Routes = [
         RouterModule.forChild(routes)
     ],
     exports: [RouterModule],
-    declarations: [UsersDetailsComponent, EditRolesComponent, ManageCodesComponent, ManageAttributesComponent]
+    declarations: [UsersDetailsComponent, EditRolesComponent, ManageCodesComponent, ManageAttributesComponent, ManageFiltersComponent]
 })
 export class AdminModule {
 }

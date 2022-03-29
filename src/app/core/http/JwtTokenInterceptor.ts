@@ -72,6 +72,9 @@ export class JwtTokenInterceptor implements HttpInterceptor {
                     this.toastr.error(element.description, element.code);
                 });
             }
+            else if (error.error) {
+                this.toastr.warning(`Error ${error.error}`);
+            }
         }
 
         // Invalid token error
@@ -100,13 +103,19 @@ export class JwtTokenInterceptor implements HttpInterceptor {
 
         // Server error
         else if (error.status === 500) {
+            if (Array.isArray(error.error)) {
+                error.error.forEach((element: { code: string, description: string }) => {
+                    this.toastr.warning(element.description, element.code);
+                });
+            } else if (error.error) {
+                this.toastr.warning(`Error ${error.error}`);
+            }
             // Show message
         }
-
         // Maintenance error
         else if (error.status === 503) {
             // Show message
-            // Redirect to the maintenance page
+            this.toastr.warning("Server is initializing");
         }
 
         return throwError(error);

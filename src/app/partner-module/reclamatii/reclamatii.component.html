@@ -65,3 +65,10 @@
         </tr>
     </tbody>
 </table>
+<div class="d-flex justify-content-center">
+    <pagination-controls id="foo" (pageChange)="page = $event" (pageBoundsCorrection)="page = $event" maxSize="9"
+        directionLinks="true" autoHide="true" responsive="true" previousLabel="Previous" currentLabel="page"
+        nextLabel="Next" screenReaderPaginationLabel="Pagination" screenReaderPageLabel="page"
+        screenReaderCurrentLabel="You're on page">
+    </pagination-controls>
+</div>
