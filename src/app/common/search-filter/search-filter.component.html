@@ -1,12 +1,3 @@
 <app-dropdown *ngIf="!!filters && filters.length > 0" class="item" [multiSelect]="false" [title]="'Selectie filtru'"
     [items]="filters" (itemClicked)="selectItem($event)">
 </app-dropdown>
-
-<ng-template #searchResults let-results let-data="data" let-done="done">
-    <div style="min-height: 80vh;">
-        <textarea style="min-height: 35vh;display: block; min-width: 100%" *ngFor="let result of results">
-            {{result | json}}
-        </textarea>
-
-    </div>
-</ng-template>

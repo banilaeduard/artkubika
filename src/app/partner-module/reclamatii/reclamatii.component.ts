@@ -19,6 +19,8 @@ export class ReclamatiiComponent implements OnInit, OnDestroy {
   public paging: PaginingModel;
   public isAdmin!: boolean;
 
+  private isIndexResults!: boolean;
+  private documentIds!: any[];
   private sub!: Subscription;
   private sub2!: Subscription;
 
@@ -34,8 +36,10 @@ export class ReclamatiiComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.sub = this.previousUrlService.previousState$.subscribe(paging => {
-      this.paging = paging ?? PaginingModel.getNew();
+    this.sub = this.previousUrlService.previousState$.subscribe(state => {
+      this.paging = state?.paging ?? PaginingModel.getNew();
+      this.isIndexResults = state?.isIndexResults ?? false;
+      this.documentIds = state?.documentIds ?? undefined;
       this.syncTickets();
     });
 
@@ -52,7 +56,11 @@ export class ReclamatiiComponent implements OnInit, OnDestroy {
     this.previousUrlService.navigateForPrevious(
       '/reclamatie',
       { ticket, complaint },
-      this.paging);
+      {
+        paging: this.paging,
+        isIndexResults: !!this.isIndexResults,
+        documentIds: this.documentIds
+      });
   }
 
   public delete(complaint: ComplaintModel) {
@@ -81,10 +89,28 @@ export class ReclamatiiComponent implements OnInit, OnDestroy {
 
   public set page(page: number) {
     this.paging.page = page;
+    if (!this.isIndexResults) {
+      this.syncTickets();
+    }
+  }
+
+  public setIndexResults(results: { count: number, results: any[] }) {
+    if (this.isIndexResults != !!results) {
+      this.paging.page = 1;
+      this.isIndexResults = !!results;
+    }
+
+    if (this.isIndexResults) {
+      this.paging.collectionSize = results.count;
+      this.documentIds = results.results;
+    } else {
+      this.documentIds = [];
+    }
+
     this.syncTickets();
   }
 
   public syncTickets() {
-    this.complaintService.getAll(this.paging).subscribe(_ => this.complaints = _);
+    this.complaintService.getAll(this.paging, this.isIndexResults ? this.documentIds : undefined).subscribe(_ => this.complaints = _);
   }
 }

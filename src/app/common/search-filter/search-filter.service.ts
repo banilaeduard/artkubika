@@ -19,7 +19,7 @@ export class SearchFilterService {
       );
   }
 
-  public query(skip: number, take: number, query: string): Observable<any[]> {
+  public query(skip: number, take: number, query: string): Observable<{ count: number, results: any[] }> {
     return this.httpClient.get<any>(`solr/${skip}/${take}/${query}`);
   }
 
