@@ -4,6 +4,7 @@ import { switchMap } from 'rxjs/operators';
 import { PreviousUrlService } from 'src/app/core/services/previous-url.service';
 import { UserContextService } from 'src/app/core/services/user-context.service';
 import { ComplaintModel } from 'src/app/models/ComplaintModel';
+import { FilterModel } from 'src/app/models/FilterModel';
 import { PaginingModel } from 'src/app/models/PaginingModel';
 import { Ticket } from 'src/app/models/Ticket';
 import { ComplaintService } from './complaint.service';
@@ -18,6 +19,7 @@ export class ReclamatiiComponent implements OnInit, OnDestroy {
   complaints!: ComplaintModel[];
   public paging: PaginingModel;
   public isAdmin!: boolean;
+  public filter!: FilterModel;
 
   private isIndexResults!: boolean;
   private documentIds!: any[];
@@ -39,6 +41,7 @@ export class ReclamatiiComponent implements OnInit, OnDestroy {
     this.sub = this.previousUrlService.previousState$.subscribe(state => {
       this.paging = state?.paging ?? PaginingModel.getNew();
       this.isIndexResults = state?.isIndexResults ?? false;
+      this.filter = state?.filter ?? undefined;
       this.documentIds = state?.documentIds ?? undefined;
       this.syncTickets();
     });
@@ -59,6 +62,7 @@ export class ReclamatiiComponent implements OnInit, OnDestroy {
       {
         paging: this.paging,
         isIndexResults: !!this.isIndexResults,
+        filter: this.filter,
         documentIds: this.documentIds
       });
   }
@@ -94,7 +98,7 @@ export class ReclamatiiComponent implements OnInit, OnDestroy {
     }
   }
 
-  public setIndexResults(results: { count: number, results: any[] }) {
+  public setIndexResults(results: { count: number, results: any[], filter: FilterModel }) {
     if (this.isIndexResults != !!results) {
       this.paging.page = 1;
       this.isIndexResults = !!results;
@@ -106,7 +110,7 @@ export class ReclamatiiComponent implements OnInit, OnDestroy {
     } else {
       this.documentIds = [];
     }
-
+    this.filter = results?.filter;
     this.syncTickets();
   }
 

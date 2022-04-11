@@ -52,8 +52,8 @@
 
     <ng-template #treeView let-distance="distance">
         <app-dropdown *ngIf="codeStackDropdown[distance]?.length" class="item" [items]="codeStackDropdown[distance]"
-            [title]="this.codeStack[distance]?.length > 0 ? getTitle(distance) : 'Selectati coletul'"
-            (itemClicked)="selectItem($event, distance)">
+            [title]="codeStack[distance]?.length > 0 ? getTitle(distance) : 'Selectati coletul'"
+            [selected]="getSelected(distance)" (itemClicked)="selectItemDropDown($event, distance)">
         </app-dropdown>
         <div *ngIf="hasSelectedChildren(distance)">
             <ng-container *ngTemplateOutlet="treeView;context:{distance: distance + 1}">

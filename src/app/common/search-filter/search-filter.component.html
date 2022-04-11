@@ -1,3 +1,3 @@
-<app-dropdown *ngIf="!!filters && filters.length > 0" class="item" [multiSelect]="false" [title]="'Selectie filtru'"
-    [items]="filters" (itemClicked)="selectItem($event)">
+<app-dropdown *ngIf="!!filters && filters.length > 0" class="item" [multiSelect]="false" [items]="filters"
+    (itemClicked)="selectItem($event)" [selected]="filter">
 </app-dropdown>

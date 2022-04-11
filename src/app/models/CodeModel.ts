@@ -11,5 +11,6 @@ export interface CodeModel extends dropdown {
     args: string;
     isRoot: boolean;
 
+    selected: boolean;
     parent: CodeModel | undefined;
 }

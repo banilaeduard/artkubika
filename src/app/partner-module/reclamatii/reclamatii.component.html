@@ -10,7 +10,8 @@
                         screenReaderPageLabel="page" screenReaderCurrentLabel="You're on page">
                     </pagination-controls>
                 </div>
-                <app-search-filter [skip]="page" [take]="paging.pageSize" (results)="setIndexResults($event)">
+                <app-search-filter [skip]="page" [filter]="filter" [take]="paging.pageSize"
+                    (results)="setIndexResults($event)">
                 </app-search-filter>
             </th>
             <th style="width: 10%;">Data</th>

@@ -26,8 +26,8 @@
                 <input placeholder="Display" type="text" [(ngModel)]="code.codeDisplay" class="form-control" />
                 <input placeholder="Value" type="text" [(ngModel)]="code.codeValue" class="form-control" />
                 <input placeholder="ValueFormat" type="text" [(ngModel)]="code.codeValueFormat" class="form-control" />
-                <app-dropdown class="item" [title]="code.attributeTags || 'Selectie atribute'" [items]="attributes"
-                    (itemClicked)="selectItem(code, $event.id)">
+                <app-dropdown class="item" [items]="attributes" [title]="code.attributeTags || 'Selectati atributele'"
+                    (itemClicked)="selectItem(code, $event)" [selected]="getSelectedAttributes(code)">
                 </app-dropdown>
                 <fa-icon (click)="remove(parent, code, root)" icon="times"
                     [styles]="{ stroke: 'black', color: 'black' }" size="2x">

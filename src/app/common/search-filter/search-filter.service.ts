@@ -27,7 +27,6 @@ export class SearchFilterService {
     var dropdown = filter as dropdown;
     dropdown.display = filter.name;
     dropdown.id = filter.id;
-    dropdown.selected = false;
     return filter;
   }
 }

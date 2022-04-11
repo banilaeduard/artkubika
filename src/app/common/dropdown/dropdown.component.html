@@ -1,7 +1,7 @@
 <div class="btn-group full" dropdown>
     <button id="button-basic" dropdownToggle type="button" class="title btn btn-outline-secondary dropdown-toggle"
         aria-controls="dropdown-basic">
-        {{title}} <span class="caret"></span>
+        {{title?.length > 0 ? title: DEFAULT_TITLE}} <span class="caret"></span>
     </button>
     <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu full" role="menu" aria-labelledby="button-basic"
         style="z-index: 9999;">
@@ -19,8 +19,7 @@
                 </h5>
 
                 <li *ngIf="item.visible" role="menuitem"> <a
-                        [ngClass]="{'selected' : item.displayItem.selected, 'dropdown-item': true}"
-                        (click)="clicked(item)">
+                        [ngClass]="{'selected' : !!item.selected, 'dropdown-item': true}" (click)="clicked(item)">
                         {{item.displayItem.display}}
                     </a></li>
             </div>

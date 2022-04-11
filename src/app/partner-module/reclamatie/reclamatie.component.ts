@@ -5,6 +5,7 @@ import { PreviousUrlService } from 'src/app/core/services/previous-url.service';
 import { Attachment } from 'src/app/models/Attachment';
 import { CodeModel } from 'src/app/models/CodeModel';
 import { ComplaintModel } from 'src/app/models/ComplaintModel';
+import { dropdown } from 'src/app/models/dropdown';
 import { Ticket } from 'src/app/models/Ticket';
 import { CodesService } from '../codes.service';
 import { ComplaintService } from '../reclamatii/complaint.service';
@@ -75,7 +76,17 @@ export class ReclamatieComponent implements OnInit {
     }
   }
 
-  public selectItem = (triggerCode: CodeModel, distance: number, autoParent: boolean = true): void => {
+  public selectItemDropDown = (selectedNodes: CodeModel[], distance: number, autoParent: boolean = true): void => {
+    var allDistanceNodes = [...selectedNodes, ...(this.codeStack[distance] || [])];
+    for (const node of allDistanceNodes) {
+      if (this.isSelected(node) !== !!selectedNodes.find(t => t.id == node.id)) {
+        this.setSelected(node, !!selectedNodes.find(t => t.id == node.id));
+        this.selectItem(node, distance, autoParent);
+      }
+    }
+  }
+
+  private selectItem = (triggerCode: CodeModel, distance: number, autoParent: boolean = true): void => {
     this.codeStack[distance] = this.codeStack[distance] || [];
     this.codeStackDropdown[distance + 1] = this.codeStackDropdown[distance + 1] || [];
 
@@ -147,6 +158,11 @@ export class ReclamatieComponent implements OnInit {
     return this.codeStack[distance]
       ?.filter(codeModel => this.isSelected(codeModel))
       .map(t => t.codeDisplay).join(', ');
+  }
+
+  public getSelected(distance: number): dropdown[] {
+    return this.codeStack[distance]
+      ?.filter(codeModel => this.isSelected(codeModel));
   }
 
   public hasSelectedChildren(distance: number): boolean {

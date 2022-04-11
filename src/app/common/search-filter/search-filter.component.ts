@@ -12,10 +12,10 @@ export class SearchFilterComponent implements OnInit, OnChanges {
   @Input() skip: number;
   @Input() take: number;
   @Input() tag: string;
-  @Output() results: EventEmitter<{ count: number, results: any[] }> = new EventEmitter();
+  @Input() filter: FilterModel | undefined;
+  @Output() results: EventEmitter<{ count: number, results: any[], filter: FilterModel }> = new EventEmitter();
 
   filters: FilterModel[] = [];
-  filterSelected: FilterModel | undefined;
 
   constructor(
     private searchFilterService: SearchFilterService
@@ -24,6 +24,7 @@ export class SearchFilterComponent implements OnInit, OnChanges {
     this.take = 10;
     this.tag = "";
   }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.skip) {
       this.skip = changes.skip.currentValue;
@@ -43,14 +44,14 @@ export class SearchFilterComponent implements OnInit, OnChanges {
   }
 
   selectItem(event: FilterModel) {
-    this.filterSelected = event.selected ? event : undefined;
+    this.filter = event;
     this.searchValues();
   }
 
   searchValues() {
-    if (this.filterSelected) {
-      this.searchFilterService.query(this.skip, this.take, this.filterSelected.query).subscribe(results => {
-        this.results.emit(results);
+    if (this.filter) {
+      this.searchFilterService.query(this.skip, this.take, this.filter.query).subscribe(results => {
+        this.results.emit({ ...results, filter: this.filter! });
       });
     } else this.results.emit(undefined);
   }
